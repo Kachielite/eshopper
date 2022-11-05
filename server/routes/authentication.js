@@ -9,6 +9,13 @@ const route = express.Router();
 route.post(
   "/register",
   [
+    body("name")
+      .trim()
+      .not()
+      .isEmpty()
+      .withMessage("Name can not be empty")
+      .isLength({ min: 4 })
+      .withMessage("Name must be at least 4 characters long"),
     body("email")
       .trim()
       .isEmail()

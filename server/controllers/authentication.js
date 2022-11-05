@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/Users");
 
 exports.registration = (req, res, next) => {
+  let name = req.body.name;
   let email = req.body.email;
   let password = req.body.password;
 
@@ -19,6 +20,7 @@ exports.registration = (req, res, next) => {
     .hash(password, 12)
     .then((hashedPassword) => {
       const user = new User();
+      user.name = name;
       user.email = email;
       user.password = hashedPassword;
       return user.save();
