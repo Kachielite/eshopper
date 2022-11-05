@@ -11,6 +11,14 @@ app.get("/", (req, res, next) => {
   res.status(200).json({ message: "server is responding well" });
 });
 
+
+//error handler
+app.use((error, req, res, next)=>{
+    let message = error.message
+    let statusCode = error.statusCode
+    res.status(statusCode).json({message})
+})
+
 mongoose
   .connect(
     `mongodb+srv://twiickle:${process.env.MONGODBCRED}@cluster0.pc0jurl.mongodb.net/?retryWrites=true&w=majority`
