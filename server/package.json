@@ -1,0 +1,14 @@
+{
+  "name": "twiikle",
+  "version": "1.0.0",
+  "description": "an e-commerce CMS platform ",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Derrick Madumere",
+  "license": "ISC",
+  "dependencies": {
+    "expressjs": "^1.0.1"
+  }
+}
