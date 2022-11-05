@@ -5,6 +5,7 @@ const authControllers = require("../controllers/authentication");
 
 const route = express.Router();
 
+//Registration
 route.post(
   "/register",
   [
@@ -42,5 +43,7 @@ route.post(
   authControllers.registration
 );
 
+//Login
+route.put("/login", authControllers.login);
 
-module.exports = route
+module.exports = route;
