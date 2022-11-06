@@ -54,6 +54,29 @@ route.post(
 route.put("/login", authControllers.login);
 
 //Forget Password
-route.put("/reset_password", authControllers.forgetPassword)
+route.put("/forget_password", authControllers.forgetPassword);
+
+//Reset Password
+route.post(
+  "/reset_password/:token",
+  [
+    body("password")
+      .not()
+      .isEmpty()
+      .withMessage("Password can not be empty")
+      .isStrongPassword({
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+        returnScore: false,
+      })
+      .withMessage(
+        "Password must contain at least 8 characters, 1 lowercase, 1 uppercase, 1 number and 1 special character."
+      ),
+  ],
+  authControllers.resetPassword
+);
 
 module.exports = route;

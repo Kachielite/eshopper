@@ -94,9 +94,9 @@ exports.forgetPassword = (req, res, next) => {
 
   crypto.randomBytes(32, (err, buffer) => {
     if (err) {
-        let error = new Error("An error occurred while generating token");
-        error.statusCode = 401;
-        throw error;
+      let error = new Error("An error occurred while generating token");
+      error.statusCode = 401;
+      throw error;
     }
     token = buffer.toString("hex");
   });
@@ -116,7 +116,7 @@ exports.forgetPassword = (req, res, next) => {
       return user.save();
     })
     .then((results) => {
-        //todo Change the reset password link
+      //todo Change the reset password link
       return transport.sendMail({
         from: "admin@eshopper.com.ng",
         to: req.body.email,
@@ -136,6 +136,54 @@ exports.forgetPassword = (req, res, next) => {
         throw error;
       }
       res.status(200).json({ message: "Email successfully sent" });
+    })
+    .catch((error) => {
+      if (!error.statusCode) {
+        error.statusCode = 500;
+      }
+      next(error);
+    });
+};
+
+exports.resetPassword = (req, res, next) => {
+  let resetToken = req.params.token;
+  let password = req.body.password;
+  let user;
+
+  User.findOne({ reset_token: resetToken })
+    .then((userDoc) => {
+      if (!userDoc) {
+        let error = new Error("Invalid Token");
+        error.statusCode = 500;
+        throw error;
+      }
+      return User.findOne({
+        reset_token: resetToken,
+        resetExpiration: { $gt: Date.now() },
+      });
+    })
+    .then((userDoc) => {
+      if (!userDoc) {
+        let error = new Error("Token has expired");
+        error.statusCode = 500;
+        throw error;
+      }
+      return userDoc;
+    })
+    .then((userDoc) => {
+      user = userDoc;
+      return bcrypt.hash(password, 12);
+    })
+    .then((hashPassword) => {
+      user.password = hashPassword;
+      user.reset_token = "";
+      user.reset_expiration = null;
+      return user.save();
+    })
+    .then((result) => {
+      res
+        .status(200)
+        .json({ message: "Password has successfully been updated" });
     })
     .catch((error) => {
       if (!error.statusCode) {
