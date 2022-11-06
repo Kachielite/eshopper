@@ -14,6 +14,12 @@ const User = new Schema({
         type: String,
         required: true
     },
+    reset_token: {
+        type:String,
+    },
+    reset_expiration: {
+        type: Date,
+    }
 
 },{timestamps: true});
 

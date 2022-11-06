@@ -53,4 +53,7 @@ route.post(
 //Login
 route.put("/login", authControllers.login);
 
+//Forget Password
+route.put("/reset_password", authControllers.forgetPassword)
+
 module.exports = route;
