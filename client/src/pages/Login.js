@@ -13,7 +13,7 @@ const Login = () => {
           <img src={coverImage} alt="" className="h-100 w-100 " />
         </div>
         {/* Input Container */}
-        <div className=" bg-white px-6 py-12 rounded-2xl md:rounded-none md:w-[50%] md:px-10 md:py-2">
+        <div className=" bg-white px-12 py-4 w-[90vw] rounded-2xl md:rounded-none md:w-[50%] md:px-10 md:py-2">
           <h1 className="text-text1 py-3 font-bold font-sans text-[1.9rem] text-left">
             Welcome to <span className="text-blue1">Eshopper</span>
           </h1>
@@ -51,6 +51,15 @@ const Login = () => {
           <button className="bg-blue1 text-white text-md mt-24 w-full p-3 rounded-md shadow-lg border-2 border-blue1 hover:bg-white hover:text-blue1 hover:border-2 hover:border-blue1  duration-100 ">
             Login
           </button>
+          <p className="text-text2 font-sans font-light text-xs text-center mt-12 mb-1">
+            Don't have an account?{" "}
+            <span>
+              {" "}
+              <a href="/sign-up" className="text-blue1 font-sans font-light text-xs">
+                Sign Up
+              </a>
+            </span>
+          </p>
         </div>
       </div>
     </div>
