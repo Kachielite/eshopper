@@ -1,3 +1,4 @@
+import {Link} from 'react-router-dom'
 import coverImage from "../assets/images/shopping.jpeg";
 import userIcon from "../assets/icons/User.svg";
 import emailIcon from "../assets/icons/Email.svg";
@@ -80,9 +81,9 @@ const SignUp = () => {
             Already have an account?{" "}
             <span>
               {" "}
-              <a href="/" className="text-blue1 font-sans font-light text-xs">
+              <Link to="/" className="text-blue1 font-sans font-light text-xs">
                 Login
-              </a>
+              </Link>
             </span>
           </p>
         </div>
