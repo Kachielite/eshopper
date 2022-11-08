@@ -1,10 +1,17 @@
-import './App.css';
+import { Routes, Route } from "react-router-dom";
+import ForgotPassword from "./pages/ForgotPassword";
+import Login from "./pages/Login";
+import ResetPassword from "./pages/ResetPassword";
+import SignUp from "./pages/Sign-up";
 
 function App() {
   return (
-    <h1 className="text-3xl font-bold underline text-cyan-600">
-      Hello world!
-    </h1>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/sign-up" element={<SignUp/>}/>
+        <Route path="/forgot_password" element={<ForgotPassword/>}/>
+        <Route path="/reset_password" element={<ResetPassword/>}/>
+      </Routes>
   );
 }
 
