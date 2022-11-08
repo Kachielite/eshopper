@@ -43,7 +43,7 @@ const Login = () => {
                   Remember me
                 </p>
               </div>
-              <a href="/#" className="text-blue1 font-sans font-light text-xs">
+              <a href="/" className="text-blue1 font-sans font-light text-xs">
                 Forgot password?
               </a>
             </div>
