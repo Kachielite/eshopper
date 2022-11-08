@@ -23,18 +23,22 @@ const Login = () => {
           </p>
           {/* Form Container */}
           <div className="w-full flex flex-col justify-center space-y-4">
-            <div className="flex flex-row justify-start items-center p-2 bg-bg3">
+          <div className="flex flex-row justify-start items-center p-2 bg-bg3">
               <img src={userIcon} alt="" srcset="" className="mr-3" />
               <input
                 type="text"
-                className="w-full p-1 bg-bg3 font-sans text-text1 outline-none  placeholder-bg3"
+                name="name"
+                placeholder="Name"
+                className="w-full p-1 bg-bg3 font-sans text-text1 outline-none "
               />
             </div>
             <div className="flex flex-row justify-start items-center p-2 bg-bg3 ">
               <img src={passwordIcon} alt="" srcset="" className="mr-3" />
               <input
                 type="password"
-                className="w-full p-1 bg-bg3 font-sans text-text1 outline-none placeholder-bg3"
+                name="Password"
+                placeholder="Password"
+                className="w-full p-1 bg-bg3 font-sans text-text1 outline-none"
               />
             </div>
             <div className="flex justify-between items-center font-light">
