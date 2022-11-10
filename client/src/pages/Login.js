@@ -60,7 +60,7 @@ const Login = () => {
                   Welcome Back. Please login to your account
                 </p>
                 {/* Form Container */}
-                <div className="w-full flex flex-col justify-center space-y-4">
+                <div className="w-full flex flex-col justify-center space-y-4 md:h-[8rem]">
                   <div className="flex flex-col">
                     <div
                       className={`flex flex-row justify-start items-center p-2 bg-bg3 ${
@@ -131,14 +131,11 @@ const Login = () => {
                   </div>
                 </div>
                 <button
-                  disabled={
-                    errors.acceptTOS || errors.email || errors.password
-                      ? true
-                      : false
-                  }
+                  type="submit"
+                  disabled={errors.email || errors.password ? true : false}
                   className={
-                    errors.acceptTOS || errors.email || errors.password
-                      ? `bg-blue-300 rounded-md text-white text-md mt-24 w-full p-3`
+                    errors.email || errors.password
+                      ? `bg-blue-300 rounded-md text-white text-md mt-24 w-full p-3 md:mt-20`
                       : `bg-blue1 text-white text-md mt-24 w-full p-3 rounded-md shadow-lg  shadow-blue-200 hover:shadow-none border-2 border-blue1 hover:bg-white hover:text-blue1 hover:border-2 hover:border-blue1  duration-100 md:mt-20 `
                   }>
                   Login
