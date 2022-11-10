@@ -6,9 +6,8 @@ import userIcon from "../assets/icons/User.svg";
 import passwordIcon from "../assets/icons/Password.svg";
 
 const Login = () => {
-  const handleSubmit = ({ email, password, acceptTOS }, { setFieldError }) => {
-    console.log(email, password, acceptTOS)
-
+  const handleSubmit = ({ email, password, rememberME }, { setFieldError }) => {
+    console.log(email, password, rememberME);
   };
 
   const validationSchema = Yup.object().shape({
@@ -16,10 +15,6 @@ const Login = () => {
       .email("Please enter a valid email")
       .required("Email is required"),
     password: Yup.string().required("Password is required"),
-    acceptTOS: Yup.bool().oneOf(
-      [true],
-      "You must accept our Terms and Conditions"
-    ),
   });
 
   return (
@@ -40,7 +35,7 @@ const Login = () => {
           initialValues={{
             email: "",
             password: "",
-            acceptTOS: false,
+            rememberMe: false,
           }}
           onSubmit={(values, errors) => {
             handleSubmit(values, errors);
@@ -71,7 +66,7 @@ const Login = () => {
                       className={`flex flex-row justify-start items-center p-2 bg-bg3 ${
                         errors.email ? "border border-red" : ""
                       }`}>
-                      <img src={userIcon} alt="user icon"  className="mr-3" />
+                      <img src={userIcon} alt="user icon" className="mr-3" />
                       <input
                         type="email"
                         name="email"
@@ -110,34 +105,29 @@ const Login = () => {
                       {touched.password && errors.password}
                     </p>
                   </div>
-                  <div className="flex flex-col">
-                    <div className="flex justify-between items-center font-light">
-                      <div className="flex flex-row">
-                        <input
-                          type="checkbox"
-                          name=""
-                          id=""
-                          className={`mr-1 ${
-                            errors.acceptTOS ? "border border-red" : ""
-                          }`}
-                          value={values.acceptTOS}
-                          onChange={handleChange("acceptTOS")}
-                          onBlur={handleBlur("acceptTOS")}
-                        />
-                        <p className="text-text2 font-sans font-light text-xs">
-                          Remember me
-                        </p>
-                      </div>
-
-                      <Link
-                        to="/forgot_password"
-                        className="text-blue1 font-sans font-light text-xs">
-                        Forgot password?
-                      </Link>
+                  <div className="flex justify-between items-center font-light">
+                    <div className="flex flex-row">
+                      <input
+                        type="checkbox"
+                        name=""
+                        id=""
+                        className={`mr-1 ${
+                          errors.acceptTOS ? "border border-red" : ""
+                        }`}
+                        value={values.acceptTOS}
+                        onChange={handleChange("acceptTOS")}
+                        onBlur={handleBlur("acceptTOS")}
+                      />
+                      <p className="text-text2 font-sans font-light text-xs">
+                        Remember me
+                      </p>
                     </div>
-                    <p className="text-red text-xs mt-1">
-                      {touched.acceptTOS && errors.acceptTOS}
-                    </p>
+
+                    <Link
+                      to="/forgot_password"
+                      className="text-blue1 font-sans font-light text-xs">
+                      Forgot password?
+                    </Link>
                   </div>
                 </div>
                 <button
