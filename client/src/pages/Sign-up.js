@@ -199,8 +199,8 @@ const SignUp = () => {
                   disabled={errors.name || errors.email || errors.password || errors.confirmPassword || errors.acceptTOS ? true : false}
                   className={
                     errors.name || errors.email || errors.password || errors.confirmPassword || errors.acceptTOS
-                      ? `bg-blue-300 rounded-md text-white text-md mt-8 w-full p-3 md:mt-20`
-                      : `bg-blue1 text-white text-md mt-8 w-full p-3 rounded-md shadow-lg  shadow-blue-200 hover:shadow-none border-2 border-blue1 hover:bg-white hover:text-blue1 hover:border-2 hover:border-blue1  duration-100 md:mt-20 `
+                      ? `bg-blue-300 rounded-md text-white text-md mt-8 w-full p-3 md:mt-4`
+                      : `bg-blue1 text-white text-md mt-8 w-full p-3 rounded-md shadow-lg  shadow-blue-200 hover:shadow-none border-2 border-blue1 hover:bg-white hover:text-blue1 hover:border-2 hover:border-blue1  duration-100 md:mt-4 `
                   }>
                   Create Account
                 </button>

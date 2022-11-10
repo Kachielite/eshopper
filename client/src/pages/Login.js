@@ -60,7 +60,7 @@ const Login = () => {
                   Welcome Back. Please login to your account
                 </p>
                 {/* Form Container */}
-                <div className="w-full flex flex-col justify-center space-y-4 md:h-[8rem]">
+                <div className="w-full flex flex-col justify-center space-y-4 md:h-[10rem]">
                   <div className="flex flex-col">
                     <div
                       className={`flex flex-row justify-start items-center p-2 bg-bg3 ${
@@ -109,20 +109,16 @@ const Login = () => {
                     <div className="flex flex-row">
                       <input
                         type="checkbox"
-                        name=""
-                        id=""
-                        className={`mr-1 ${
-                          errors.acceptTOS ? "border border-red" : ""
-                        }`}
-                        value={values.acceptTOS}
-                        onChange={handleChange("acceptTOS")}
-                        onBlur={handleBlur("acceptTOS")}
+                        name="rememberMe"
+                        value={values.rememberMe}
+                        onChange={handleChange("rememberMe")}
+                        onBlur={handleBlur("rememberMe")}
+                        className="mr-1"
                       />
                       <p className="text-text2 font-sans font-light text-xs">
                         Remember me
                       </p>
                     </div>
-
                     <Link
                       to="/forgot_password"
                       className="text-blue1 font-sans font-light text-xs">
