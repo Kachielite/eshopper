@@ -36,6 +36,7 @@ const SignUp = () => {
   return (
     // Global Container
     <div className="bg-bg3 min-h-screen  flex flex-row justify-center items-center text-left">
+      
       {/* Sign up Model Container */}
       <div className="flex flex-row shadow-2xl justify-center  md:p-0 rounded-xl overflow-hidden mx-6 md:max-w-4xl  md:w-[53rem] md:h-[35rem] md:mx-0">
         {/* Image Container */}

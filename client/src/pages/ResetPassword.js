@@ -27,8 +27,13 @@ const ResetPassword = () => {
   });
   return (
     // Global Container
-    <div className="bg-bg3 min-h-screen  flex flex-row justify-center items-center text-left">
-      {/* Sign up Model Container */}
+    <div className="relative bg-bg3 min-h-screen  flex flex-row justify-center items-center text-left z-0">
+      {/* Error Container */}
+      {false && <><div className="absolute bg-black opacity-75 w-screen min-h-screen z-10 flex justify-center items-center"></div>
+      <div className="bg-white p-3 absolute z-50">
+        <p>Invalid Token</p>
+      </div></>}
+      {/* Reset Container */}
       <div className="flex flex-row shadow-2xl justify-center  md:p-0 rounded-xl overflow-hidden mx-6 md:max-w-4xl  md:w-[53rem] md:h-[35rem] md:mx-0">
         {/* Image Container */}
         <div className="hidden md:block md:w-[50%]">
@@ -156,9 +161,11 @@ const ResetPassword = () => {
                 </div>
                 <button
                   type="submit"
-                  disabled={errors.password || errors.confirmPassword ? true : false}
+                  disabled={
+                    errors.password || errors.confirmPassword ? true : false
+                  }
                   className={
-                    errors.password || errors.confirmPassword 
+                    errors.password || errors.confirmPassword
                       ? `bg-blue-300 rounded-md text-white text-md mt-24 w-full p-3 md:mt-8`
                       : `bg-blue1 text-white text-md mt-24 w-full p-3 rounded-md shadow-lg  shadow-blue-200 hover:shadow-none border-2 border-blue1 hover:bg-white hover:text-blue1 hover:border-2 hover:border-blue1  duration-100 md:mt-8 `
                   }>
