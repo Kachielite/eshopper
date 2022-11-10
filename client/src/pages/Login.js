@@ -64,7 +64,7 @@ const Login = () => {
                   <div className="flex flex-col">
                     <div
                       className={`flex flex-row justify-start items-center p-2 bg-bg3 ${
-                        errors.email ? "border border-red" : ""
+                        touched.email && errors.email ? "border border-red" : ""
                       }`}>
                       <img src={userIcon} alt="user icon" className="mr-3" />
                       <input
@@ -84,7 +84,7 @@ const Login = () => {
                   <div className="flex flex-col">
                     <div
                       className={`flex flex-row justify-start items-center p-2 bg-bg3 ${
-                        errors.password ? "border border-red" : ""
+                        touched.password && errors.password ? "border border-red" : ""
                       }`}>
                       <img
                         src={passwordIcon}

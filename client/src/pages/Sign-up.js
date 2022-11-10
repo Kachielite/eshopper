@@ -22,7 +22,7 @@ const SignUp = () => {
       .required("Password is required")
       .matches(
         /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-        "Password must contain 8 Characters, 1 uppercase, 1 Lowercase, 1 Number and 1 special case character"
+        "Password must contain 8 Characters containing at least 1 uppercase, 1 Lowercase, 1 Number and 1 special case character"
       ),
     confirmPassword: Yup.string()
       .oneOf([Yup.ref("password"), null], "Passwords must match")
