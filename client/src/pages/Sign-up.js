@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import axios from 'axios';
 import coverImage from "../assets/images/shopping.jpeg";
 import userIcon from "../assets/icons/User.svg";
 import emailIcon from "../assets/icons/Email.svg";
@@ -8,7 +9,7 @@ import passwordIcon from "../assets/icons/Password.svg";
 
 const SignUp = () => {
   const handleSubmit = ({ name, email, password, acceptTOS }) => {
-    console.log(name, email, password, acceptTOS);
+    axios.post('')
   };
 
   const validationSchema = Yup.object({

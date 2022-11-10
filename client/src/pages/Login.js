@@ -1,13 +1,30 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import axios from "axios";
+import { LineWave } from "react-loader-spinner";
 import coverImage from "../assets/images/eshopper.jpeg";
 import userIcon from "../assets/icons/User.svg";
 import passwordIcon from "../assets/icons/Password.svg";
 
 const Login = () => {
-  const handleSubmit = ({ email, password, rememberME }, { setFieldError }) => {
-    console.log(email, password, rememberME);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const handleSubmit = (values, { setFieldError }) => {
+    console.log(values.email)
+    setLoading(true);
+    axios
+      .put("http://172.20.10.4:3001/v1/login", {email: values.email, password: values.password})
+      .then((results) => {
+        console.log(results);
+        setLoading(false);
+        navigate("/dashboard");
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.log(error);
+      });
   };
 
   const validationSchema = Yup.object().shape({
@@ -19,9 +36,12 @@ const Login = () => {
 
   return (
     // Global Container
-    <div className="bg-bg3 min-h-screen  flex flex-row justify-center items-center text-left">
+    <div className="bg-bg3 min-h-screen  flex flex-col justify-center items-center text-left">
+      <div className="flex  max-w-md justify-center items-center bg-red shadow-xl rounded-xl p-3 font-bold transition-all ease-in-out duration-200">
+        <p className=' text-white text-md'>Email not found</p>
+      </div>
       {/* Login Model Container */}
-      <div className="flex flex-row shadow-2xl justify-center  md:p-0 rounded-xl overflow-hidden mx-6 md:max-w-4xl  md:w-[53rem] md:h-[35rem] md:mx-0">
+      <div className="flex flex-row shadow-2xl justify-center mt-4   md:p-0 rounded-xl overflow-hidden mx-6 md:max-w-4xl  md:w-[53rem] md:h-[35rem] md:mx-0">
         {/* Image Container */}
         <div className="hidden md:block md:w-[50%]">
           <img
@@ -84,7 +104,9 @@ const Login = () => {
                   <div className="flex flex-col">
                     <div
                       className={`flex flex-row justify-start items-center p-2 bg-bg3 ${
-                        touched.password && errors.password ? "border border-red" : ""
+                        touched.password && errors.password
+                          ? "border border-red"
+                          : ""
                       }`}>
                       <img
                         src={passwordIcon}
@@ -126,16 +148,33 @@ const Login = () => {
                     </Link>
                   </div>
                 </div>
-                <button
-                  type="submit"
-                  disabled={errors.email || errors.password ? true : false}
-                  className={
-                    errors.email || errors.password
-                      ? `bg-blue-300 rounded-md text-white text-md mt-24 w-full p-3 md:mt-20`
-                      : `bg-blue1 text-white text-md mt-24 w-full p-3 rounded-md shadow-lg  shadow-blue-200 hover:shadow-none border-2 border-blue1 hover:bg-white hover:text-blue1 hover:border-2 hover:border-blue1  duration-100 md:mt-20 `
-                  }>
-                  Login
-                </button>
+                {loading ? (
+                  <div className="flex justify-center items-center">
+                    <LineWave
+                      height="100"
+                      width="100"
+                      color="#4fa94d"
+                      ariaLabel="line-wave"
+                      wrapperStyle={{}}
+                      wrapperClass=""
+                      visible={true}
+                      firstLineColor="#0081FF"
+                      middleLineColor="#0081FF"
+                      lastLineColor="#0081FF"
+                    />
+                  </div>
+                ) : (
+                  <button
+                    type="submit"
+                    disabled={errors.email || errors.password ? true : false}
+                    className={
+                      errors.email || errors.password
+                        ? `bg-blue-300 rounded-md text-white text-md mt-24 w-full p-3 md:mt-20`
+                        : `bg-blue1 text-white text-md mt-24 w-full p-3 rounded-md shadow-lg  shadow-blue-200 hover:shadow-none border-2 border-blue1 hover:bg-white hover:text-blue1 hover:border-2 hover:border-blue1  duration-100 md:mt-20 `
+                    }>
+                    Login
+                  </button>
+                )}
                 <p className="text-text2 font-sans font-light text-xs text-center mt-12 mb-1">
                   Don't have an account?{" "}
                   <span>

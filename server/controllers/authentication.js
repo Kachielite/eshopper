@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
+const cors = require("cors");
 const User = require("../models/Users");
 
 let transport = nodemailer.createTransport({
@@ -57,6 +58,8 @@ exports.login = (req, res, next) => {
   let password = req.body.password;
   let user;
 
+  console.log(email)
+
   User.findOne({ email: email })
     .then((userDoc) => {
       if (!userDoc) {
@@ -77,8 +80,8 @@ exports.login = (req, res, next) => {
         expiresIn: "7d",
       });
     })
-    .then((results) => {
-      res.status(200).json({ message: "User authenticated successfully" });
+    .then((token) => {
+      res.status(200).json({ message: "User authenticated successfully", token: token, userId: user._id.toString()});
     })
     .catch((error) => {
       if (!error.statusCode) {
