@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import { Transition } from "@headlessui/react";
 import { LineWave } from "react-loader-spinner";
 import coverImage from "../assets/images/eshopper.jpeg";
 import userIcon from "../assets/icons/User.svg";
@@ -10,12 +11,17 @@ import passwordIcon from "../assets/icons/Password.svg";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [showError, setShowError] = useState(false);
   const navigate = useNavigate();
   const handleSubmit = (values, { setFieldError }) => {
-    console.log(values.email)
+    console.log(values.email);
     setLoading(true);
     axios
-      .put("http://172.20.10.4:3001/v1/login", {email: values.email, password: values.password})
+      .put("http://192.168.136.78:3001/v1/login", {
+        email: values.email,
+        password: values.password,
+      })
       .then((results) => {
         console.log(results);
         setLoading(false);
@@ -23,9 +29,16 @@ const Login = () => {
       })
       .catch((error) => {
         setLoading(false);
-        console.log(error);
+        setShowError(true);
+        setError(error.response.data.message);
       });
   };
+
+  useEffect(() => {
+    setTimeout(()=>{
+      setShowError(false)
+    },[6000])
+  }, [showError])
 
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -36,12 +49,21 @@ const Login = () => {
 
   return (
     // Global Container
-    <div className="bg-bg3 min-h-screen  flex flex-col justify-center items-center text-left">
-      <div className="flex  max-w-md justify-center items-center bg-red shadow-xl rounded-xl p-3 font-bold transition-all ease-in-out duration-200">
-        <p className=' text-white text-md'>Email not found</p>
-      </div>
+    <div className="bg-bg3 min-h-screen w-screen flex flex-col justify-center items-center text-left absolute">
+      <Transition
+        show={showError}
+        enter="transition ease-out duration-700"
+        enterFrom="opacity-0 translate-y-1"
+        enterTo="opacity-100 translate-y-0"
+        leave="transition ease-in duration-700"
+        leaveFrom="opacity-100 translate-y-0"
+        leaveTo="opacity-0 translate-y-1">
+        <p className=" text-white text-sm  bg-red opacity-90 -left-40 px-3 py-2 text-center w-[20rem] absolute rounded md:left-10">
+          {error}
+        </p>
+      </Transition>
       {/* Login Model Container */}
-      <div className="flex flex-row shadow-2xl justify-center mt-4   md:p-0 rounded-xl overflow-hidden mx-6 md:max-w-4xl  md:w-[53rem] md:h-[35rem] md:mx-0">
+      <div className="flex flex-row shadow-2xl justify-center mt-4  md:p-0 rounded-xl overflow-hidden mx-6 md:max-w-4xl  md:w-[53rem] md:h-[35rem] md:mx-0">
         {/* Image Container */}
         <div className="hidden md:block md:w-[50%]">
           <img
@@ -72,7 +94,7 @@ const Login = () => {
             return (
               <form
                 onSubmit={handleSubmit}
-                className=" bg-white px-8 w-screen  py-4 rounded-2xl md:rounded-none md:w-[50%] md:px-10 md:py-2">
+                className="  bg-white px-8 w-[90vw] py-4 rounded-2xl md:rounded-none md:w-[50%] md:px-10 md:py-2">
                 <h1 className="text-text1 py-3 font-bold font-sans text-[1.9rem] text-left">
                   Welcome to <span className="text-blue1">Eshopper</span>
                 </h1>
