@@ -23,13 +23,6 @@ route.post(
       .not()
       .isEmpty()
       .withMessage("Email can not be empty")
-      .custom((value, { req }) => {
-        return User.findOne({ email: value }).then((userDoc) => {
-          if (userDoc) {
-            return Promise.reject("Email already exist");
-          }
-        });
-      })
       .normalizeEmail(),
     body("password")
       .not()
@@ -56,9 +49,12 @@ route.put("/login", authControllers.login);
 //Forget Password
 route.put("/forget_password", authControllers.forgetPassword);
 
+//Get User details
+route.get("/get_user/:token", authControllers.getUserDetails)
+
 //Reset Password
 route.post(
-  "/reset_password/:token",
+  "/reset_password",
   [
     body("password")
       .not()

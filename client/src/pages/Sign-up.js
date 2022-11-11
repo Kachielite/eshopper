@@ -1,16 +1,51 @@
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import axios from 'axios';
+import axios from "axios";
+import { Transition } from "@headlessui/react";
+import { LineWave } from "react-loader-spinner";
 import coverImage from "../assets/images/shopping.jpeg";
 import userIcon from "../assets/icons/User.svg";
 import emailIcon from "../assets/icons/Email.svg";
 import passwordIcon from "../assets/icons/Password.svg";
 
 const SignUp = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [showError, setShowError] = useState(false);
+
+  const navigate = useNavigate();
   const handleSubmit = ({ name, email, password, acceptTOS }) => {
-    axios.post('')
+    setLoading(true);
+    axios
+      .post("http://192.168.1.153:3001/v1/register", {
+        name: name,
+        email: email,
+        password: password,
+      })
+      .then((results) => {
+        console.log(results);
+        setLoading(false);
+        navigate("/");
+      })
+      .catch((error) => {
+        setLoading(false);
+        setShowError(true);
+        setError(
+          error.response.data.message
+            ? error.response.data.message
+            : error.message
+        );
+        console.log(error);
+      });
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShowError(false);
+    }, [6000]);
+  }, [showError]);
 
   const validationSchema = Yup.object({
     name: Yup.string()
@@ -36,8 +71,20 @@ const SignUp = () => {
 
   return (
     // Global Container
-    <div className="bg-bg3 min-h-screen  flex flex-row justify-center items-center text-left">
-      
+    <div className="bg-bg3 min-h-screen  flex flex-row justify-center items-center text-left relative">
+      <Transition
+        className={`absolute top-14 md:top-36`}
+        show={showError}
+        enter="transition ease-out duration-700"
+        enterFrom="opacity-0 translate-y-1"
+        enterTo="opacity-100 translate-y-0"
+        leave="transition ease-in duration-700"
+        leaveFrom="opacity-100 translate-y-0"
+        leaveTo="opacity-0 translate-y-1">
+        <p className=" text-white text-sm  bg-red opacity-90  px-3 py-2 text-center w-[20rem] mb-8 rounded">
+          {error}
+        </p>
+      </Transition>
       {/* Sign up Model Container */}
       <div className="flex flex-row shadow-2xl justify-center  md:p-0 rounded-xl overflow-hidden mx-6 md:max-w-4xl  md:w-[53rem] md:h-[35rem] md:mx-0">
         {/* Image Container */}
@@ -196,16 +243,45 @@ const SignUp = () => {
                     {touched.acceptTOS && errors.acceptTOS}
                   </p>
                 </div>
-                <button
-                  type="submit"
-                  disabled={errors.name || errors.email || errors.password || errors.confirmPassword || errors.acceptTOS ? true : false}
-                  className={
-                    errors.name || errors.email || errors.password || errors.confirmPassword || errors.acceptTOS
-                      ? `bg-blue-300 rounded-md text-white text-md mt-8 w-full p-3 md:mt-4`
-                      : `bg-blue1 text-white text-md mt-8 w-full p-3 rounded-md shadow-lg  shadow-blue-200 hover:shadow-none border-2 border-blue1 hover:bg-white hover:text-blue1 hover:border-2 hover:border-blue1  duration-100 md:mt-4 `
-                  }>
-                  Create Account
-                </button>
+                {loading ? (
+                  <div className="flex justify-center items-center">
+                    <LineWave
+                      height="100"
+                      width="100"
+                      color="#4fa94d"
+                      ariaLabel="line-wave"
+                      wrapperStyle={{}}
+                      wrapperClass=""
+                      visible={true}
+                      firstLineColor="#0081FF"
+                      middleLineColor="#0081FF"
+                      lastLineColor="#0081FF"
+                    />
+                  </div>
+                ) : (
+                  <button
+                    type="submit"
+                    disabled={
+                      errors.name ||
+                      errors.email ||
+                      errors.password ||
+                      errors.confirmPassword ||
+                      errors.acceptTOS
+                        ? true
+                        : false
+                    }
+                    className={
+                      errors.name ||
+                      errors.email ||
+                      errors.password ||
+                      errors.confirmPassword ||
+                      errors.acceptTOS
+                        ? `bg-blue-300 rounded-md text-white text-md mt-8 w-full p-3 md:mt-4`
+                        : `bg-blue1 text-white text-md mt-8 w-full p-3 rounded-md shadow-lg  shadow-blue-200 hover:shadow-none border-2 border-blue1 hover:bg-white hover:text-blue1 hover:border-2 hover:border-blue1  duration-100 md:mt-4 `
+                    }>
+                    Create Account
+                  </button>
+                )}
                 <p className="text-text2 font-sans font-light text-xs text-center mt-8 mb-1 md:mt-6">
                   Already have an account?{" "}
                   <span>

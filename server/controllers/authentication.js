@@ -30,8 +30,15 @@ exports.registration = (req, res, next) => {
     throw error;
   }
 
-  bcrypt
-    .hash(password, 12)
+  User.findOne({ email: email })
+    .then((userDoc) => {
+      if (userDoc) {
+        let error = new Error("Email already exist");
+        error.statusCode = 422;
+        throw error;
+      }
+      return bcrypt.hash(password, 12);
+    })
     .then((hashedPassword) => {
       const user = new User();
       user.name = name;
@@ -58,7 +65,7 @@ exports.login = (req, res, next) => {
   let password = req.body.password;
   let user;
 
-  console.log(email)
+  console.log(email);
 
   User.findOne({ email: email })
     .then((userDoc) => {
@@ -81,7 +88,11 @@ exports.login = (req, res, next) => {
       });
     })
     .then((token) => {
-      res.status(200).json({ message: "User authenticated successfully", token: token, userId: user._id.toString()});
+      res.status(200).json({
+        message: "User authenticated successfully",
+        token: token,
+        userId: user._id.toString(),
+      });
     })
     .catch((error) => {
       if (!error.statusCode) {
@@ -126,7 +137,7 @@ exports.forgetPassword = (req, res, next) => {
         subject: "Password Reset",
         html: `
             <h1>Reset Password</h1>
-            <p>Click this <a href='http://kachi28.herokuapp.com/reset/${token}'>link</a> to reset your password</p>
+            <p>Click this <a href='http://192.168.1.153:3000/reset_password/${token}'>link</a> to reset your password</p>
             `,
       });
     })
@@ -148,31 +159,34 @@ exports.forgetPassword = (req, res, next) => {
     });
 };
 
-exports.resetPassword = (req, res, next) => {
+exports.getUserDetails = (req, res, next) => {
   let resetToken = req.params.token;
-  let password = req.body.password;
-  let user;
 
-  User.findOne({ reset_token: resetToken })
+  User.findOne({ reset_token: resetToken,  resetExpiration: { $gt: Date.now() }, })
     .then((userDoc) => {
       if (!userDoc) {
-        let error = new Error("Invalid Token");
-        error.statusCode = 500;
-        throw error;
-      }
-      return User.findOne({
-        reset_token: resetToken,
-        resetExpiration: { $gt: Date.now() },
-      });
-    })
-    .then((userDoc) => {
-      if (!userDoc) {
-        let error = new Error("Token has expired");
+        let error = new Error("Invalid Token or Token has expired");
         error.statusCode = 500;
         throw error;
       }
       return userDoc;
+    }).then((user) => {
+      res.status(200).json({ name: user.name, email: user.email });
     })
+    .catch((error) => {
+      if (!error.statusCode) {
+        error.statusCode = 500;
+      }
+      next(error);
+    });
+};
+
+exports.resetPassword = (req, res, next) => {
+  let email = req.body.email
+  let password = req.body.password;
+  let user;
+
+  User.findOne({ email:email })
     .then((userDoc) => {
       user = userDoc;
       return bcrypt.hash(password, 12);

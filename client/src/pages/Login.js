@@ -13,12 +13,12 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showError, setShowError] = useState(false);
+
   const navigate = useNavigate();
-  const handleSubmit = (values, { setFieldError }) => {
-    console.log(values.email);
+  const handleSubmit = (values) => {
     setLoading(true);
     axios
-      .put("http://192.168.136.78:3001/v1/login", {
+      .put("http://192.168.1.153:3001/v1/login", {
         email: values.email,
         password: values.password,
       })
@@ -30,15 +30,20 @@ const Login = () => {
       .catch((error) => {
         setLoading(false);
         setShowError(true);
-        setError(error.response.data.message);
+        setError(
+          error.response.data.message
+            ? error.response.data.message
+            : error.message
+        );
+        console.log(error);
       });
   };
 
   useEffect(() => {
-    setTimeout(()=>{
-      setShowError(false)
-    },[6000])
-  }, [showError])
+    setTimeout(() => {
+      setShowError(false);
+    }, [7000]);
+  }, [showError]);
 
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -49,8 +54,9 @@ const Login = () => {
 
   return (
     // Global Container
-    <div className="bg-bg3 min-h-screen w-screen flex flex-col justify-center items-center text-left absolute">
+    <div className="bg-bg3 min-h-screen w-screen flex flex-col justify-center  items-center text-left relative">
       <Transition
+        className={`absolute top-14 md:top-36`}
         show={showError}
         enter="transition ease-out duration-700"
         enterFrom="opacity-0 translate-y-1"
@@ -58,7 +64,7 @@ const Login = () => {
         leave="transition ease-in duration-700"
         leaveFrom="opacity-100 translate-y-0"
         leaveTo="opacity-0 translate-y-1">
-        <p className=" text-white text-sm  bg-red opacity-90 -left-40 px-3 py-2 text-center w-[20rem] absolute rounded md:left-10">
+        <p className=" text-white text-sm  bg-red opacity-90  px-3 py-2 text-center w-[20rem] mb-8 rounded">
           {error}
         </p>
       </Transition>
