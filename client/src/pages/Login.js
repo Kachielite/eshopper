@@ -18,7 +18,7 @@ const Login = () => {
   const handleSubmit = (values) => {
     setLoading(true);
     axios
-      .put("http://192.168.1.153:3001/v1/login", {
+      .put(`${process.env.REACT_APP_ENDPOINT}/v1/login`, {
         email: values.email,
         password: values.password,
       })

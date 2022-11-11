@@ -24,7 +24,7 @@ const ResetPassword = () => {
   const handleSubmit = ({ password }) => {
     setLoading(true);
     axios
-      .post(`http://192.168.1.153:3001/v1/reset_password`, {
+      .post(`${process.env.REACT_APP_ENDPOINT}/v1/reset_password`, {
         email: user.email,
         password: password,
       })
@@ -49,7 +49,7 @@ const ResetPassword = () => {
     setLoadingUserData(true)
     console.log(token)
     axios
-      .get(`http://192.168.1.153:3001/v1/get_user/${token}`)
+      .get(`${process.env.REACT_APP_ENDPOINT}/v1/get_user/${token}`)
       .then((results) => {
         console.log(results)
         setUser(results.data);

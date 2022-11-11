@@ -19,7 +19,7 @@ const SignUp = () => {
   const handleSubmit = ({ name, email, password, acceptTOS }) => {
     setLoading(true);
     axios
-      .post("http://192.168.1.153:3001/v1/register", {
+      .post(`${process.env.REACT_APP_ENDPOINT}/v1/register`, {
         name: name,
         email: email,
         password: password,

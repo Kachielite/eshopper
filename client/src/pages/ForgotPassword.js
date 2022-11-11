@@ -18,7 +18,7 @@ const ForgotPassword = () => {
     setShowSuccess(false)
     setLoading(true)
     axios
-      .put("http://192.168.1.153:3001/v1/forget_password", { email: email })
+      .put(`${process.env.REACT_APP_ENDPOINT}/v1/forget_password`, { email: email })
       .then(results =>{
         setLoading(false)
         setShowSuccess(true)
