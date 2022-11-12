@@ -8,11 +8,11 @@ import SignUp from "./pages/Sign-up";
 function App() {
   return (
       <Routes>
-        <Route path="/" element={<Login />} />
         <Route path="/sign-up" element={<SignUp/>}/>
         <Route path="/forgot_password" element={<ForgotPassword/>}/>
         <Route path="/reset_password/:token" element={<ResetPassword/>}/>
         <Route path="/dashboard" element={<Dashboard/>}/>
+        <Route path="/" element={<Login />} />
       </Routes>
   );
 }
