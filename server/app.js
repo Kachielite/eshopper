@@ -11,7 +11,7 @@ const port = process.env.PORT;
 //Middleware
 app.use(cors());
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "https://eshopper-ng.netlify.app");
+  res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Methods",
     "OPTIONS, GET, POST, PUT, PATCH, DELETE"
@@ -25,6 +25,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 
 //routes
+app.options('*', cors()) 
 app.use('/v1', authRoute)
 app.get("/", (req, res, next) => {
   res.status(200).json({ message: "server is responding well" });
