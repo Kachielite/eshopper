@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const { body } = require("express-validator");
 const User = require("../models/Users");
 const authControllers = require("../controllers/authentication");
@@ -44,6 +45,7 @@ route.post(
 );
 
 //Login
+route.put("/login", cors());
 route.put("/login", authControllers.login);
 
 //Forget Password
