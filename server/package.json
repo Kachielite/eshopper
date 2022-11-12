@@ -4,7 +4,8 @@
     "description": "an e-commerce CMS platform ",
     "main": "app.js",
     "scripts": {
-        "dev": "nodemon ./app.js"
+        "dev": "nodemon ./app.js",
+        "start": "node ./app.js"
     },
     "author": "Derrick Madumere",
     "license": "ISC",
