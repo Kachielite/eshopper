@@ -21,7 +21,9 @@ app.use((req, res, next) => {
     "Content-Type, Authorization, Origin, Accept, X-Custom-Header"
   );
   if (req.method === "OPTIONS") {
-    return res.status(200).end();
+    res.header('Access-Control-Allow-Origin', req.headers.origin);
+  } else {
+    res.header('Access-Control-Allow-Origin', '*');
   }
   next();
 });
