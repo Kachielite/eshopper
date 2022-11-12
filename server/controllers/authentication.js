@@ -65,7 +65,6 @@ exports.login = (req, res, next) => {
   let password = req.body.password;
   let user;
 
-
   User.findOne({ email: email })
     .then((userDoc) => {
       if (!userDoc) {
@@ -136,7 +135,7 @@ exports.forgetPassword = (req, res, next) => {
         subject: "Password Reset",
         html: `
             <h1>Reset Password</h1>
-            <p>Click this <a href='http://192.168.1.153:3000/reset_password/${token}'>link</a> to reset your password</p>
+            <p>Click this <a href='https://eshopper.com.ng/reset_password/${token}'>link</a> to reset your password</p>
             `,
       });
     })
@@ -161,7 +160,10 @@ exports.forgetPassword = (req, res, next) => {
 exports.getUserDetails = (req, res, next) => {
   let resetToken = req.params.token;
 
-  User.findOne({ reset_token: resetToken,  resetExpiration: { $gt: Date.now() }, })
+  User.findOne({
+    reset_token: resetToken,
+    resetExpiration: { $gt: Date.now() },
+  })
     .then((userDoc) => {
       if (!userDoc) {
         let error = new Error("Invalid Token or Token has expired");
@@ -169,7 +171,8 @@ exports.getUserDetails = (req, res, next) => {
         throw error;
       }
       return userDoc;
-    }).then((user) => {
+    })
+    .then((user) => {
       res.status(200).json({ name: user.name, email: user.email });
     })
     .catch((error) => {
@@ -181,11 +184,11 @@ exports.getUserDetails = (req, res, next) => {
 };
 
 exports.resetPassword = (req, res, next) => {
-  let email = req.body.email
+  let email = req.body.email;
   let password = req.body.password;
   let user;
 
-  User.findOne({ email:email })
+  User.findOne({ email: email })
     .then((userDoc) => {
       user = userDoc;
       return bcrypt.hash(password, 12);
