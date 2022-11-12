@@ -1,7 +1,9 @@
+import Sidebar from "../components/Sidebar";
+
 const Dashboard = () => {
     return (
-        <div>
-            This is the Dashboard
+        <div className="flex flex-row justify-start items-center w-screen h-screen">
+            <Sidebar/>
         </div>
     )
 }
