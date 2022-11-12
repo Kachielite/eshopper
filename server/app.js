@@ -12,7 +12,7 @@ const port = process.env.PORT;
 app.use(cors());
 app.use((req, res, next) => {
   userId = req.userId;
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", "https://eshopper-ng.netlify.app/");
   res.setHeader(
     "Access-Control-Allow-Methods",
     "OPTIONS, GET, POST, PUT, PATCH, DELETE"
