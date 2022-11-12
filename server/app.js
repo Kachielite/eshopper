@@ -11,13 +11,12 @@ const port = process.env.PORT;
 //Middleware
 app.use(cors());
 app.use((req, res, next) => {
-  userId = req.userId;
-  res.setHeader("Access-Control-Allow-Origin", "https://eshopper-ng.netlify.app/");
-  res.setHeader(
+  res.header("Access-Control-Allow-Origin", "https://eshopper-ng.netlify.app/");
+  res.header(
     "Access-Control-Allow-Methods",
     "OPTIONS, GET, POST, PUT, PATCH, DELETE"
   );
-  res.setHeader(
+  res.header(
     "Access-Control-Allow-Headers",
     "Content-Type, Authorization, Origin"
   );
@@ -26,8 +25,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 
 //routes
-app.use("/v1", cors());
-app.use("/v1", cors(), authRoute);
+app.use("/v1", authRoute);
 app.get("/", (req, res, next) => {
   res.status(200).json({ message: "server is responding well" });
 });
