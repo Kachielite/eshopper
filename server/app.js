@@ -7,9 +7,15 @@ const authRoute = require('./routes/authentication')
 
 const app = express();
 const port = process.env.PORT;
+const corsOptions = {
+  origin: '*',
+  optionsSuccessStatus: 200,
+  credentials: true
+  
+}
 
 //Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -25,7 +31,6 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 
 //routes
-app.options('*', cors()) 
 app.use('/v1', authRoute)
 app.get("/", (req, res, next) => {
   res.status(200).json({ message: "server is responding well" });
