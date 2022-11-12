@@ -9,25 +9,10 @@ const app = express();
 const port = process.env.PORT;
 
 //Middleware
-app.use(cors({
-  origin:'*'
-}));
-app.use((req, res, next) => {
-
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    'Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS'
-  );
-  res.setHeader(
-    'Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token'
-  );
-
-  next();
-});
+app.use(cors());
 app.use(bodyParser.json());
 
 //routes
-app.options('*', cors())
 app.use("/v1", authRoute);
 app.get("/", (req, res, next) => {
   res.status(200).json({ message: "server is responding well" });
@@ -35,6 +20,7 @@ app.get("/", (req, res, next) => {
 
 //error handler
 app.use((error, req, res, next) => {
+  console.log(error);
   let message = error.message;
   let statusCode = error.statusCode;
   let data = error.data;

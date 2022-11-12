@@ -65,7 +65,6 @@ exports.login = (req, res, next) => {
   let password = req.body.password;
   let user;
 
-  console.log(email);
 
   User.findOne({ email: email })
     .then((userDoc) => {

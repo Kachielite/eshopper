@@ -45,7 +45,6 @@ route.post(
 );
 
 //Login
-route.put("/login", cors());
 route.put("/login", authControllers.login);
 
 //Forget Password
