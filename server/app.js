@@ -10,13 +10,10 @@ const port = process.env.PORT;
 
 //Middleware
 app.use(bodyParser.json());
-app.use(
-  cors({
-    origin: "*",
-  })
-);
+
 
 //routes
+app.use("/v1", cors())
 app.use("/v1", cors(), authRoute);
 app.get("/", (req, res, next) => {
   res.status(200).json({ message: "server is responding well" });
