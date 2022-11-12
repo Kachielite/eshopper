@@ -18,8 +18,11 @@ app.use((req, res, next) => {
   );
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, Origin"
+    "Content-Type, Authorization, Origin, Accept, X-Custom-Header"
   );
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
   next();
 });
 app.use(bodyParser.json());
