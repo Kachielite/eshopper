@@ -62,7 +62,7 @@ const TopBar = () => {
               onClick={showSettingsHandler}
             />
             <Transition
-              className={`absolute top-11 -right-5 `}
+              className={`absolute top-9 -right-5`}
               show={showSettings}
               enter="transition ease-out duration-200"
               enterFrom="opacity-0 translate-y-0"
@@ -71,18 +71,25 @@ const TopBar = () => {
               leaveFrom="opacity-100 translate-y-1"
               leaveTo="opacity-0 translate-y-0"
               onMouseLeave={() => setShowSettings(false)}>
-              <div className=" flex flex-col md:w-48  bg-bg2 space-y-1">
-                <div className="flex flex-row py-2 px-5 space-x-2.5 w-full h-11 topbar-activeMenu ">
-                  <img src={userIcon} alt="Profile" className="icon" />
-                  <p className="text-base text-text1 font-normal">My Profile</p>
+              <div className="flex flex-col space-y-0 p-0">
+                <div class="w-full overflow-hidden flex flex-col items-end pr-7">
+                  <div class=" h-3 w-3 bg-bg2 rotate-45 transform origin-bottom-left"></div>
                 </div>
-                <div className="flex flex-row py-2 px-5 space-x-2.5 w-full h-11 topbar-activeMenu">
-                  <img src={settingsIcon} alt="settings" className="icon" />
-                  <p className="text-base text-text1 font-normal">Settings</p>
-                </div>
-                <div className="flex flex-row py-2 px-5 space-x-2.5 w-full h-11 border-t-2 border-bgWhite topbar-activeMenu">
-                  <img src={logOutIcon} alt="Profile" className="icon" />
-                  <p className="text-base text-text1 font-normal">Logout</p>
+                <div className=" flex flex-col md:w-48  bg-bg2 space-y-1">
+                  <div className="flex flex-row py-2 px-5 space-x-2.5 w-full h-11 topbar-activeMenu ">
+                    <img src={userIcon} alt="Profile" className="icon" />
+                    <p className="text-base text-text1 font-normal">
+                      My Profile
+                    </p>
+                  </div>
+                  <div className="flex flex-row py-2 px-5 space-x-2.5 w-full h-11 topbar-activeMenu">
+                    <img src={settingsIcon} alt="settings" className="icon" />
+                    <p className="text-base text-text1 font-normal">Settings</p>
+                  </div>
+                  <div className="flex flex-row py-2 px-5 space-x-2.5 w-full h-11 border-t-2 border-bgWhite topbar-activeMenu">
+                    <img src={logOutIcon} alt="Profile" className="icon" />
+                    <p className="text-base text-text1 font-normal">Logout</p>
+                  </div>
                 </div>
               </div>
             </Transition>
