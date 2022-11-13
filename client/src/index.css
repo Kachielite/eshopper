@@ -14,11 +14,11 @@ html body {
 
 
 .activeMenu {
-  @apply  hover:bg-bg3 hover:border-l-4 hover:border-blue1 duration-200
+  @apply  hover:bg-bgWhite hover:border-l-4 hover:border-blue1 duration-200
 }
 
 .topbar-activeMenu {
-  @apply  hover:bg-bg3  duration-150
+  @apply  hover:bg-bgWhite  duration-150
 }
 
 .icon {
