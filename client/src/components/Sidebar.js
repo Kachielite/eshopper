@@ -6,50 +6,77 @@ import productIcon from "../assets/icons/Cart.svg";
 import ordersIcon from "../assets/icons/Clipboard.svg";
 import customerIcon from "../assets/icons/Contacts.svg";
 
-const Sidebar = () => {
+const Sidebar = ({ show, refTarget }) => {
   return (
     // Global Container
-    <div className="w-16 md:w-2/12 min-h-screen flex flex-col">
+    <div
+      className={`absolute z-10 md:static ${
+        show ? "md:w-[14%] w-[40]" : "md:w-16 hidden"
+      } min-h-screen md:flex md:flex-col duration-200 `} >
       {/* Logo Container */}
-      <div className="flex justify-center items-center w-full h-16">
-        <img
-          src={logoCover}
-          alt="logo_cover"
-          className="hidden md:block h-full w-full object-cover object-center"
-        />
-        <img src={logo} alt="logo" className=" md:hidden" />
-      </div>
-      {/* Menu Item Container */}
-      <div className="flex flex-col justify-center items-center w-full ">
-        <div className="flex flex-row justify-start py-6 px-5 space-x-2.5 items-center w-full h-16 activeMenu cursor-pointer">
-          <img src={dashboardIcon} alt="dashboard" />
-          <h3 className="text-text1 font-medium text-base md:block hidden">
-            Dashboard
-          </h3>
+      <div className="bg-white w-full  min-h-screen md:w-full" ref={refTarget}>
+        <div className="flex justify-center items-center w-full h-16 bg-blue1">
+          {show ? (
+            <img
+              src={logoCover}
+              alt="logo_cover"
+              className=" md:block h-full w-full object-scale-down object-center "
+            />
+          ) : (
+            <img
+              src={logo}
+              alt="logo"
+              className=" object-scale-down object-center h-12 w-12"
+            />
+          )}
         </div>
-        <div className="flex flex-row justify-start py-6 px-5 space-x-2.5 items-center w-full h-16 activeMenu cursor-pointer">
-          <img src={productIcon} alt="product" />
-          <h3 className="text-text1 font-medium text-base md:block hidden">
-            Products
-          </h3>
-        </div>
-        <div className="flex flex-row justify-start py-6 px-5 space-x-2.5 items-center w-full h-16 activeMenu cursor-pointer">
-          <img src={ordersIcon} alt="orders" />
-          <h3 className="text-text1 font-medium text-base md:block hidden">
-            Orders
-          </h3>
-        </div>
-        <div className="flex flex-row justify-start py-6 px-5 space-x-2.5 items-center w-full h-16 activeMenu cursor-pointer">
-          <img src={customerIcon} alt="customers" />
-          <h3 className="text-text1 font-medium text-base md:block hidden">
-            Customers
-          </h3>
-        </div>
-        <div className="flex flex-row justify-start py-6 px-5 space-x-2.5 items-center w-full h-16 activeMenu cursor-pointer">
-          <img src={reviewIcon} alt="reviews" />
-          <h3 className="text-text1 font-medium text-base md:block hidden">
-            Reviews
-          </h3>
+        {/* Menu Item Container */}
+        <div className="flex flex-col justify-center items-center w-full">
+          <div className="flex flex-row justify-start py-6 px-5 space-x-2.5 items-center w-full h-16 activeMenu cursor-pointer">
+            <img src={dashboardIcon} alt="dashboard" className="sidebar-icon" />
+            <h3
+              className={`text-text1 font-medium text-base ${
+                show ? "block" : "hidden"
+              } ` }>
+              Dashboard
+            </h3>
+          </div>
+          <div className="flex flex-row justify-start py-6 px-5 space-x-2.5 items-center w-full h-16 activeMenu cursor-pointer">
+            <img src={productIcon} alt="product" className="sidebar-icon" />
+            <h3
+              className={`text-text1 font-medium text-base  ${
+                show ? "block" : "hidden"
+              }`}>
+              Products
+            </h3>
+          </div>
+          <div className="flex flex-row justify-start py-6 px-5 space-x-2.5 items-center w-full h-16 activeMenu cursor-pointer">
+            <img src={ordersIcon} alt="orders" className="sidebar-icon" />
+            <h3
+              className={`text-text1 font-medium text-base  ${
+                show ? "block" : "hidden"
+              }`}>
+              Orders
+            </h3>
+          </div>
+          <div className="flex flex-row justify-start py-6 px-5 space-x-2.5 items-center w-full h-16 activeMenu cursor-pointer">
+            <img src={customerIcon} alt="customers" className="sidebar-icon" />
+            <h3
+              className={`text-text1 font-medium text-base  ${
+                show ? "block" : "hidden"
+              }`}>
+              Customers
+            </h3>
+          </div>
+          <div className="flex flex-row justify-start py-6 px-5 space-x-2.5 items-center w-full h-16 activeMenu cursor-pointer">
+            <img src={reviewIcon} alt="reviews" className="sidebar-icon" />
+            <h3
+              className={`text-text1 font-medium text-base  ${
+                show ? "block" : "hidden"
+              }` }>
+              Reviews
+            </h3>
+          </div>
         </div>
       </div>
     </div>
