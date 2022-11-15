@@ -10,11 +10,9 @@ const Sidebar = ({ show, refTarget }) => {
   return (
     // Global Container
     <div
-      className={`absolute z-10 md:static ${
-        show ? "md:w-[14%] w-[40]" : "md:w-16 hidden"
-      } min-h-screen md:flex md:flex-col duration-200 `} >
+      className={`hidden md:flex flex-col items-start justify-start h-screen ${show ? "w-[13%]": "w-[5%]"} duration-150`} >
       {/* Logo Container */}
-      <div className="bg-white w-full  min-h-screen md:w-full" ref={refTarget}>
+      <div className="bg-white w-full md:w-full">
         <div className="flex justify-center items-center w-full h-16 bg-blue1">
           {show ? (
             <img
@@ -31,9 +29,9 @@ const Sidebar = ({ show, refTarget }) => {
           )}
         </div>
         {/* Menu Item Container */}
-        <div className="flex flex-col justify-center items-center w-full">
-          <div className="flex flex-row justify-start py-6 px-5 space-x-2.5 items-center w-full h-16 activeMenu cursor-pointer">
-            <img src={dashboardIcon} alt="dashboard" className="sidebar-icon" />
+        <div className="flex flex-col justify-center items-center w-full ">
+          <div className={`flex flex-row ${show?'justify-start':'justify-center'} py-6 px-5 space-x-2.5 items-center w-full h-16 activeMenu cursor-pointer`}>
+            <img src={dashboardIcon} alt="dashboard" className="sidebar-icon w-10 h-10" />
             <h3
               className={`text-text1 font-medium text-base ${
                 show ? "block" : "hidden"
@@ -41,8 +39,8 @@ const Sidebar = ({ show, refTarget }) => {
               Dashboard
             </h3>
           </div>
-          <div className="flex flex-row justify-start py-6 px-5 space-x-2.5 items-center w-full h-16 activeMenu cursor-pointer">
-            <img src={productIcon} alt="product" className="sidebar-icon" />
+          <div className={`flex flex-row ${show?'justify-start':'justify-center'} py-6 px-5 space-x-2.5 items-center w-full h-16 activeMenu cursor-pointer`}>
+            <img src={productIcon} alt="product" className="sidebar-icon w-10 h-10" />
             <h3
               className={`text-text1 font-medium text-base  ${
                 show ? "block" : "hidden"
@@ -50,8 +48,8 @@ const Sidebar = ({ show, refTarget }) => {
               Products
             </h3>
           </div>
-          <div className="flex flex-row justify-start py-6 px-5 space-x-2.5 items-center w-full h-16 activeMenu cursor-pointer">
-            <img src={ordersIcon} alt="orders" className="sidebar-icon" />
+          <div className={`flex flex-row ${show?'justify-start':'justify-center'} py-6 px-5 space-x-2.5 items-center w-full h-16 activeMenu cursor-pointer`}>
+            <img src={ordersIcon} alt="orders" className="sidebar-icon w-10 h-10" />
             <h3
               className={`text-text1 font-medium text-base  ${
                 show ? "block" : "hidden"
@@ -59,8 +57,8 @@ const Sidebar = ({ show, refTarget }) => {
               Orders
             </h3>
           </div>
-          <div className="flex flex-row justify-start py-6 px-5 space-x-2.5 items-center w-full h-16 activeMenu cursor-pointer">
-            <img src={customerIcon} alt="customers" className="sidebar-icon" />
+          <div className={`flex flex-row ${show?'justify-start':'justify-center'} py-6 px-5 space-x-2.5 items-center w-full h-16 activeMenu cursor-pointer`}>
+            <img src={customerIcon} alt="customers" className="sidebar-icon w-10 h-10" />
             <h3
               className={`text-text1 font-medium text-base  ${
                 show ? "block" : "hidden"
@@ -68,8 +66,8 @@ const Sidebar = ({ show, refTarget }) => {
               Customers
             </h3>
           </div>
-          <div className="flex flex-row justify-start py-6 px-5 space-x-2.5 items-center w-full h-16 activeMenu cursor-pointer">
-            <img src={reviewIcon} alt="reviews" className="sidebar-icon" />
+          <div className={`flex flex-row ${show?'justify-start':'justify-center'} py-6 px-5 space-x-2.5 items-center w-full h-16 activeMenu cursor-pointer`}>
+            <img src={reviewIcon} alt="reviews" className="sidebar-icon w-10 h-10" />
             <h3
               className={`text-text1 font-medium text-base  ${
                 show ? "block" : "hidden"

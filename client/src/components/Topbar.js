@@ -35,16 +35,16 @@ const TopBar = ({toggleSidebar}) => {
   };
   return (
     // Global Container
-    <div className="flex flex-row px-1 md:px-6 py-5 items-center justify-between w-full h-16">
+    <div className="flex flex-row px-1 md:px-6 py-5 items-center justify-between w-full h-16 bg-bg2">
       <div className="flex flex-row">
-        <img src={menuIcon} alt="menu" className="ml-2 md:mr-14 cursor-pointer hover:scale-125" onClick={toggleSidebar}/>
-        <div className="md:flex md:flex-row md:items-center hidden bg-bg1 w-72 py-2.5 px-3.5">
+        <img src={menuIcon} alt="menu" className="hidden md:block ml-2 md:mr-14 cursor-pointer hover:scale-125" onClick={toggleSidebar}/>
+        <div className="flex flex-row items-center bg-bgWhite w-72 py-2.5 px-3.5 rounded-lg">
           <img src={searchIcon} alt="search" className="mr-1.5" />
           <input
             type="text"
             name="search"
             placeholder="Search"
-            className="bg-bg1 outline-none text-text1 text-base font-normal"
+            className="bg-bgWhite outline-none text-text1 text-base font-normal"
           />
         </div>
       </div>
@@ -62,7 +62,7 @@ const TopBar = ({toggleSidebar}) => {
             onClick={showNotificationsHandler}
           />
           <Transition
-            className={`absolute top-10 -right-12 md:-right-2`}
+            className={`absolute z-10 top-10 -right-12 md:-right-2`}
             show={showNotifications}
             enter="transition ease-out duration-200"
             enterFrom="opacity-0 translate-y-0"
@@ -189,7 +189,7 @@ const TopBar = ({toggleSidebar}) => {
               className="cursor-pointer"
             />
             <Transition
-              className={`absolute top-9 -right-5`}
+              className={`absolute top-9 -right-5 z-10`}
               show={showSettings}
               enter="transition ease-out duration-200"
               enterFrom="opacity-0 translate-y-0"
