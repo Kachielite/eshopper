@@ -27,7 +27,7 @@ const Dashboard = () => {
       <Sidebar show={showSideBar} />
       <div className="flex flex-col w-full">
         <TopBar toggleSidebar={sidebarToggler} />
-        <div className={`h-full bg-bgWhite overflow-y-auto min-h-screen`}>
+        <div className={` bg-bgWhite h-full max-h-screen overflow-y-auto`}>
           <DashboardTab />
         </div>
       </div>
