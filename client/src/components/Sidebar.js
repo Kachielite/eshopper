@@ -10,7 +10,7 @@ const Sidebar = ({ show, refTarget }) => {
   return (
     // Global Container
     <div
-      className={`hidden md:flex flex-col items-start justify-start h-screen ${show ? "w-[13%]": "w-[5%]"} duration-150`} >
+      className={`hidden md:flex flex-col items-start bg-bg2 justify-start h-screen ${show ? "w-[13%]": "w-[5%]"} duration-50`} >
       {/* Logo Container */}
       <div className="bg-white w-full md:w-full">
         <div className="flex justify-center items-center w-full h-16 bg-blue1">

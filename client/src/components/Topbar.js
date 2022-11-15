@@ -35,8 +35,8 @@ const TopBar = ({toggleSidebar}) => {
   };
   return (
     // Global Container
-    <div className="flex flex-row px-1 md:px-6 py-5 items-center justify-between w-full h-16 bg-bg2">
-      <div className="flex flex-row">
+    <div className="flex flex-row px-3 md:px-6 py-5 items-center justify-between w-full h-16 bg-bg2 shadow-xl">
+      <div className="flex flex-row w-[60%]">
         <img src={menuIcon} alt="menu" className="hidden md:block ml-2 md:mr-14 cursor-pointer hover:scale-125" onClick={toggleSidebar}/>
         <div className="flex flex-row items-center bg-bgWhite w-72 py-2.5 px-3.5 rounded-lg">
           <img src={searchIcon} alt="search" className="mr-1.5" />

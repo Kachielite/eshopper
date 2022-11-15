@@ -1,5 +1,6 @@
-import tradeUpIcon from "../assets/icons/Trade-up.svg";
-import tradeDownIcon from "../assets/icons/Trade-down.svg";
+import tradeUpIcon from "../../assets/icons/Trade-up.svg";
+import tradeDownIcon from "../../assets/icons/Trade-down.svg";
+import StatsChart from "./StatsChart";
 
 const Statistics = () => {
   return (
@@ -24,10 +25,14 @@ const Statistics = () => {
           </p>
         </div>
         {/* Graph Stats */}
-        <div className="relative flex flex-col justify-center item-center space-y-2 w-40 h-40 rounded-full border-4 border-bgWhite text-center">
-          <div className="absolute w-full h-full  border-4 border-blue2 rounded-full"></div>
-          <h2 className="font-bold text-text1 text-3xl ">65%</h2>
-          <p className="font-normal text-text1 text-xs ">New Visits</p>
+        <div className="relative flex flex-col justify-center item-center">
+          <div className="absolute w-40 h-40 flex justify-center items-center flex-col">
+            <h2 className="font-bold text-text1 text-3xl ">65%</h2>
+            <p className="font-normal text-text1 text-xs ">New Visits</p>
+          </div>
+          <div className=" w-40 h-40">
+            <StatsChart color={"#22CCE2"} percentage={65}/>
+          </div>
         </div>
       </div>
       {/* Orders Stats */}
@@ -50,10 +55,14 @@ const Statistics = () => {
           </p>
         </div>
         {/* Graph Stats */}
-        <div className="relative flex flex-col justify-center item-center space-y-2 w-40 h-40 rounded-full border-4 border-bgWhite text-center">
-          <div className="absolute w-full h-full  border-4 border-orange rounded-full"></div>
-          <h2 className="font-bold text-text1 text-3xl ">75%</h2>
-          <p className="font-normal text-text1 text-xs ">New Orders</p>
+        <div className="relative flex flex-col justify-center item-center">
+          <div className="absolute w-40 h-40 flex justify-center items-center flex-col">
+            <h2 className="font-bold text-text1 text-3xl ">75%</h2>
+            <p className="font-normal text-text1 text-xs ">New Orders</p>
+          </div>
+          <div className=" w-40 h-40">
+            <StatsChart color={"#FDBF5E"} percentage={75}/>
+          </div>
         </div>
       </div>
       {/* Visit Stats */}
@@ -76,10 +85,14 @@ const Statistics = () => {
           </p>
         </div>
         {/* Graph Stats */}
-        <div className="relative flex flex-col justify-center item-center space-y-2 w-40 h-40 rounded-full border-4 border-bgWhite text-center">
-          <div className="absolute w-full h-full  border-4 border-red rounded-full"></div>
-          <h2 className="font-bold text-text1 text-3xl ">80%</h2>
-          <p className="font-normal text-text1 text-xs ">New Sales</p>
+        <div className="relative flex flex-col justify-center item-center">
+          <div className="absolute w-40 h-40 flex justify-center items-center flex-col">
+            <h2 className="font-bold text-text1 text-3xl ">80%</h2>
+            <p className="font-normal text-text1 text-xs ">New Sales</p>
+          </div>
+          <div className=" w-40 h-40">
+            <StatsChart color={"#FF3D57"} percentage={80}/>
+          </div>
         </div>
       </div>
     </div>
