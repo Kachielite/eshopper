@@ -1,29 +1,33 @@
+import { useState } from "react";
 import RevenueChart from "./RevenueChart";
 import tradeUpIcon from "../../assets/icons/Trade-up.svg";
 import tradeDownIcon from "../../assets/icons/Trade-down.svg";
 
 const RevenueStats = () => {
+  const [type, setType] = useState('text')
   return (
     <div className="w-full h-full md:w-[70%] md:h-[32rem] py-9 px-6 md:px-10  bg-bg2 rounded-xl">
       <div className="flex flex-col justify-center items-center space-y-6 md:space-y-0 md:flex-row  w-full md:justify-between md:items-center">
         <h2 className="font-bold text-text1 text-xl text-center md:text-left ">Revenue</h2>
         <div className="w-full flex flex-row">
           <div date-rangepicker class="flex flex-row justify-center items-center w-full">
-            <div class="relative w-22">
+            <div class="w-32">
               <input
                 name="start"
-                type="date"
-                class="bg-bgWhite border  text-gray-900 sm:text-sm rounded-lg block w-full pl-8 p-2 "
-                placeholder="Select date start"
+                type={type}
+                onFocus={() => setType("date")}
+                class="bg-bgWhite border  placeholder:text-text1  sm:text-sm rounded-lg block w-full px-2 p-2 "
+                placeholder="Start Date"
               />
             </div>
             <span class="mx-4 text-gray-500">to</span>
-            <div class="relative">
+            <div class="w-32">
               <input
                 name="end"
-                type="date"
-                class="bg-bgWhite border  text-gray-900 sm:text-sm rounded-lg block w-full pl-8 p-2 "
-                placeholder=""
+                type={type}
+                onFocus={() => setType("date")}
+                class="bg-bgWhite border placeholder:text-text1 sm:text-sm rounded-lg block w-full px-2 py-2 "
+                placeholder="End Date"
               />
             </div>
           </div>
@@ -32,7 +36,7 @@ const RevenueStats = () => {
           <select
             name=""
             id=""
-            className="w-[90%] bg-bgWhite p-2 rounded-lg outline-none">
+            className="w-[90%] bg-bgWhite p-2 rounded-lg outline-none text-text1">
             <option value="">Weekly</option>
           </select>
         </div>
