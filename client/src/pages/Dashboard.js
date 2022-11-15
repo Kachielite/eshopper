@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState} from "react";
 // import { useClickAway } from "react-use";
 import DashboardTab from "./MenuPages/DashboardTab";
 import Sidebar from "../components/Sidebar";
@@ -6,7 +6,7 @@ import TopBar from "../components/Topbar";
 import Footer from "../components/Footer";
 
 const Dashboard = () => {
-  const [showSideBar, setShowSideBar] = useState(false);
+  const [showSideBar, setShowSideBar] = useState(true);
   // const ref = useRef(null);
 
   // useClickAway(ref, () => {
