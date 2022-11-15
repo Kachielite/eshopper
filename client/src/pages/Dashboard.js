@@ -6,7 +6,7 @@ import TopBar from "../components/Topbar";
 import Footer from "../components/Footer";
 
 const Dashboard = () => {
-  const [showSideBar, setShowSideBar] = useState(false);
+  const [showSideBar, setShowSideBar] = useState(true);
   // const ref = useRef(null);
 
   // useClickAway(ref, () => {
