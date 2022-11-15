@@ -5,11 +5,29 @@
 html body {
   padding: 0;
   margin: 0;
-  width: 100vw
+  width: 100vw;
+  
 }
 
 .error {
   @apply text-red text-xs mt-1
+}
+
+
+.activeMenu {
+  @apply  hover:bg-bgWhite hover:md:border-l-4 hover:border-t-2 hover:border-blue1 duration-200 
+}
+
+.topbar-activeMenu {
+  @apply  hover:bg-bgWhite  duration-150
+}
+
+.icon {
+@apply w-6 h-6 text-text1
+}
+
+.sidebar-icon {
+@apply w-5 h-5 text-text1
 }
 
 /* body {
