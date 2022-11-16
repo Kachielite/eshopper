@@ -14,10 +14,10 @@ const ProfitStats = () => {
             <div className="absolute w-full h-full  border-8 border-green rounded-full"></div>
           </div> */}
           <div className="absolute text-center">
-          <h2 className="font-bold text-text1 text-3xl ">$500</h2>
+          <h2 className="font-bold text-text1 text-4xl ">$500</h2>
             <p className="font-normal text-text2 text-sm ">Total</p>
           </div>
-          <div className="h-64 w-64">
+          <div className="h-64 w-64 my-4">
             <ProfitCharts />
           </div>
         </div>
