@@ -15,7 +15,7 @@ html body {
 
 
 .activeMenu {
-  @apply  hover:bg-bgWhite hover:md:border-l-4 hover:border-t-2 hover:border-blue1 duration-200 
+  @apply  hover:bg-bgWhite hover:md:border-l-4 hover:border-t-2 hover:md:border-t-0 hover:border-blue1 duration-200 
 }
 
 .topbar-activeMenu {
