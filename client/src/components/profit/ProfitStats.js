@@ -10,9 +10,6 @@ const ProfitStats = () => {
           Profit
         </h2>
         <div className="relative flex justify-center items-center w-full">
-          {/* <div className="relative mt-8 flex flex-col justify-center item-center space-y-2 w-64 h-64 rounded-full border-[1.3rem] border-blue1 text-center">
-            <div className="absolute w-full h-full  border-8 border-green rounded-full"></div>
-          </div> */}
           <div className="absolute text-center">
           <h2 className="font-bold text-text1 text-4xl ">$500</h2>
             <p className="font-normal text-text2 text-sm ">Total</p>

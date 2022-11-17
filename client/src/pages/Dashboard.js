@@ -1,11 +1,10 @@
 import { useState} from "react";
 // import { useClickAway } from "react-use";
-import DashboardTab from "./MenuPages/DashboardTab";
 import Sidebar from "../components/Sidebar";
 import TopBar from "../components/Topbar";
 import Footer from "../components/Footer";
 
-const Dashboard = () => {
+const Dashboard = ({children}) => {
   const [showSideBar, setShowSideBar] = useState(true);
   // const ref = useRef(null);
 
@@ -28,7 +27,7 @@ const Dashboard = () => {
       <div className="flex flex-col w-full">
         <TopBar toggleSidebar={sidebarToggler} />
         <div className={` bg-bgWhite h-full max-h-screen overflow-y-auto`}>
-          <DashboardTab />
+          {children}
         </div>
       </div>
       <Footer />

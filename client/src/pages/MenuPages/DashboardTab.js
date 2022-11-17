@@ -1,3 +1,4 @@
+import Dashboard from "../Dashboard";
 import Statistics from "../../components/Statistics/Statistics";
 import RevenueStats from "../../components/revenue/RevenueStats";
 import ProfitStats from "../../components/profit/ProfitStats";
@@ -5,6 +6,7 @@ import ProfitStats from "../../components/profit/ProfitStats";
 
 const DashboardTab = () => {
   return (
+    <Dashboard>
     <div className="w-full mb-24">
       <div className="w-full flex flex-col py-12 px-3 md:px-8 space-y-8">
         <Statistics />
@@ -14,6 +16,7 @@ const DashboardTab = () => {
         </div>
       </div>
     </div>
+    </Dashboard>
   );
 };
 
