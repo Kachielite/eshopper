@@ -1,19 +1,30 @@
-require("dotenv").config();
+const fs = require("fs");
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+require("dotenv").config();
+const multer = require("multer");
+const upload = require("./utils/upload")
+
 const authRoute = require("./routes/authentication");
+const prodRoute = require("./routes/product")
+
 
 const app = express();
 const port = process.env.PORT;
 
 //Middleware
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(multer({storage: upload.fileStorage, fileFilter: upload.fileFiltering}).array('product_images',4))
+
+
 
 //routes
 app.use("/v1", authRoute);
+app.use("/v1", prodRoute)
 app.get("/", (req, res, next) => {
   res.status(200).json({ message: "server is responding well" });
 });
