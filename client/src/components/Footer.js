@@ -26,7 +26,7 @@ const Footer = () => {
         </Link>
         <Link to="/products" className="w-full">
           <div
-            className={`flex flex-col items-center w-full ${pathName === "products" ? "activeMenu": ""} cursor-pointer py-2`}>
+            className={`flex flex-col items-center w-full ${pathName.includes("product") ? "activeMenu": ""} cursor-pointer py-2`}>
             <img
               src={productIcon}
               alt="products"

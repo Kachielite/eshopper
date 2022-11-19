@@ -11,6 +11,7 @@ const Sidebar = ({ show, refTarget }) => {
   const location = useLocation();
 
   const pathName = location.pathname.substring(1);
+
   return (
     // Global Container
     <div
@@ -61,7 +62,7 @@ const Sidebar = ({ show, refTarget }) => {
               className={`flex flex-row ${
                 show ? "justify-start" : "justify-center"
               } py-6 px-5 space-x-2.5 items-center w-full h-16 ${
-                pathName === "products" ? "activeMenu" : ""
+                pathName.includes("product") ? "activeMenu" : ""
               } cursor-pointer`}>
               <img
                 src={productIcon}

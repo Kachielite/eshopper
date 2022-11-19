@@ -9,8 +9,19 @@ html body {
   
 }
 
+
+.input-cls {
+  @apply text-text1 text-xs outline-none bg-white
+
+}
+
+.tag-cls {
+  @apply text-text1 text-xs p-10 
+}
+
+
 .error {
-  @apply text-red text-xs mt-1
+  @apply text-red text-xs mt-1 
 }
 
 
@@ -29,6 +40,16 @@ html body {
 .sidebar-icon {
 @apply w-5 h-5 text-text1
 }
+
+.toolbarClassName, .wrapperClassName, .editorClassName{
+  @apply text-text1 
+}
+
+.ReactTags__tags {
+  @apply text-text1 bg-bg3
+}
+
+
 
 /* body {
   margin: 0;
