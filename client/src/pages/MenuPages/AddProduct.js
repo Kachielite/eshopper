@@ -90,7 +90,7 @@ const AddProduct = () => {
               <h3 className="text-text2 font-normal text-sm">Tags</h3>
               <Tags />
             </div>
-            <div className="flex flex-row justify-end items-center w-full h-full bg-bg2 space-x-6 mb-10">
+            <div className="flex flex-row justify-end items-center w-full h-full bg-bg2 space-x-6 my-10">
               <button
                 type="submit"
                 className="bg-blue1 py-2.5 px-10 rounded text-white text-base font-medium hover:bg-blue-200 hover:border-blue-200 hover:text-blue1 duration-200">

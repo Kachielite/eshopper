@@ -10,7 +10,42 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-exports.addProduct = async (req, res, next) => {
+const uploadPhoto = (photoArray) => {
+  return new Promise((resolve, reject) => {
+    let urlArray = [];
+    photoArray.map((photo) => {
+      cloudinary.uploader
+        .upload(photo.path, { folder: "eshopper-photos" })
+        .then((results) => {
+          urlArray.push({ url: results.url, id: results.public_id });
+          deleteFile(photo.path);
+          if (urlArray.length === photoArray.length) {
+            resolve(urlArray);
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  });
+};
+
+exports.getAllProducts = (req, res, next) => {
+  Product.find()
+    .then((results) => {
+      res
+        .status(200)
+        .json({ message: "Products successfully fetched", products: results });
+    })
+    .catch((error) => {
+      if (!error.statusCode) {
+        error.statusCode = 500;
+      }
+      next(error);
+    });
+};
+
+exports.addProduct = (req, res, next) => {
   const productName = req.body.product_name;
   const productDescription = req.body.product_description;
   const category = req.body.category;
@@ -29,7 +64,6 @@ exports.addProduct = async (req, res, next) => {
   }
 
   const product = new Product();
-
   product.product_name = productName;
   product.product_description = productDescription;
   product.category = category;
@@ -38,59 +72,91 @@ exports.addProduct = async (req, res, next) => {
   product.tags = tags;
   product.status = status;
 
-  const uploadPhoto = (file) => {
-    return new Promise((resolve) => {
-      cloudinary.uploader.upload(
-        file,
-        (results) => {
-          resolve({ url: results.url, id: results.public_id });
-        },
-        { folder: "eshopper-photos" }
-      );
+  uploadPhoto(photos)
+    .then((array) => {
+      product.product_images = array;
+      return product.save();
+    })
+    .then((results) => {
+      res.status(201).json({
+        message: "Product successfully added",
+        productId: results._id.toString(),
+      });
+    })
+    .catch((error) => {
+      if (!error.statusCode) {
+        error.statusCode = 500;
+      }
+      next(error);
     });
-  };
+};
 
-//   try {
-//     let uploadedPhoto = [];
-//     if (photos.length > 0) {
-//       photos.map((photo) => {
-//         product.photo_images = uploadedPhoto.push(uploadPhoto(photo.path));
-//       });
-//     } else {
-//       return (product.photo_images = uploadedPhoto);
-//     }
+exports.editProduct = (req, res, next) => {
+  const id = req.params.id;
+  const productName = req.body.product_name;
+  const productDescription = req.body.product_description;
+  const category = req.body.category;
+  const price = req.body.price;
+  const discount = req.body.discount;
+  const tags = req.body.tags;
+  const status = req.body.status;
+  const photos = req.files;
 
-//     try {
-//       const uploadedProduct = await product.save();
-//       res
-//         .status(201)
-//         .json({
-//           message: "Product successfully added",
-//           productId: uploadedProduct._id.toString(),
-//         });
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   } catch (error) {
-//     console.log(error);
-//     if (!error.statusCode) {
-//       error.statusCode = 500;
-//     }
-//   }
+  let errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    let error = new Error("Invalid input data");
+    error.status = 412;
+    error.data = errors.array();
+    throw error;
+  }
 
-  //   uploadPhotos()
-  //     .then((results) => {
-  //       product.product_images = results;
-  //       return product.save();
-  //     })
-  //     .then((results) => {
-  //       res.status(201).json({ message: "Product successfully added" });
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       if (!error.statusCode) {
-  //         error.statusCode = 500;
-  //       }
-  //       throw error;
-  //     });
+  Product.findById(id).then((product) => {
+    if (!product) {
+      let error = new Error(`Product with id:${id} does not exist`);
+      error.statusCode = 404;
+      throw error;
+    }
+    product.product_name = productName;
+    product.product_description = productDescription;
+    product.category = category;
+    product.price = price;
+    product.discount = discount;
+    product.tags = tags;
+    product.status = status;
+
+    if (req.files.length != 0) {
+      uploadPhoto(photos)
+        .then((array) => {
+          product.product_images.push([...array]);
+          return product.save();
+        })
+        .then((results) => {
+          res.status(201).json({
+            message: "Product successfully updated",
+            productId: results._id.toString(),
+          });
+        })
+        .catch((error) => {
+          if (!error.statusCode) {
+            error.statusCode = 500;
+          }
+          next(error);
+        });
+    } else {
+      product
+        .save()
+        .then((results) => {
+          res.status(201).json({
+            message: "Product successfully updated",
+            productId: results._id.toString(),
+          });
+        })
+        .catch((error) => {
+          if (!error.statusCode) {
+            error.statusCode = 500;
+          }
+          next(error);
+        });
+    }
+  });
 };
