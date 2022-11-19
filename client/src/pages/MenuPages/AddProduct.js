@@ -38,7 +38,7 @@ const AddProduct = () => {
             </div>
             <img src={imageXL} alt="" className="w-[34rem] h-[34rem]" />
           </div>
-          <div className="flex flex-col justify-start space-y-3 items-start h-[36rem] w-[26rem]">
+          <div className="flex flex-col justify-start space-y-3 items-start md:h-[36rem] md:w-[26rem]">
             <div className="w-full flex flex-col space-y-1">
               <h3 className="text-text2 font-normal text-sm">Product Name</h3>
               <input
@@ -67,7 +67,7 @@ const AddProduct = () => {
             <div className="w-full flex flex-row justify-between items-center">
               <div className=" flex flex-col space-y-1">
                 <h3 className="text-text2 font-normal text-sm">Price</h3>
-                <div className="flex flex-row items-center bg-bg3 rounded px-2 w-40">
+                <div className="flex flex-row items-center bg-bg3 rounded px-2 md:w-40 w-32">
                   <p className="text-text1 text-lg">$</p>
                   <input
                     type="number"
@@ -77,7 +77,7 @@ const AddProduct = () => {
               </div>
               <div className=" flex flex-col space-y-1">
                 <h3 className="text-text2 font-normal text-sm">Discount</h3>
-                <div className="flex flex-row items-center bg-bg3 rounded px-2 w-40">
+                <div className="flex flex-row items-center bg-bg3 rounded px-2 md:w-40 w-32">
                   <p className="text-text1 text-lg">%</p>
                   <input
                     type="number"
