@@ -30,6 +30,22 @@ const uploadPhoto = (photoArray) => {
   });
 };
 
+const deletePhoto = (photoArray) => {
+  return new Promise((resolve, reject) => {
+    let urlArray = [];
+    photoArray.map((photo) => {
+      cloudinary.uploader
+        .destroy(photo.id)
+        .then((results) => {
+          resolve(true)
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  });
+};
+
 exports.getAllProducts = (req, res, next) => {
   Product.find()
     .then((results) => {
@@ -90,6 +106,9 @@ exports.addProduct = (req, res, next) => {
       next(error);
     });
 };
+
+
+
 
 exports.editProduct = (req, res, next) => {
   const id = req.params.id;
@@ -160,3 +179,21 @@ exports.editProduct = (req, res, next) => {
     }
   });
 };
+
+exports.deleteProduct = (req, res, next) =>{
+  const id = req.params.id;
+
+  Product.findById(id).then(product =>{
+      deletePhoto(product.product_images)
+  }).then(() =>{
+    return Product.findOneAndRemove({_id: id})
+  }).then(results =>{
+    res.status(200).json({message:"Product successfully deleted"})
+  }).catch(error =>{
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    next(error);
+  })
+
+}

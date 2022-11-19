@@ -68,6 +68,10 @@ route.put(
   productController.editProduct
 );
 
+//Get All Product
 route.get('/products', productController.getAllProducts)
+
+//Delete Product
+route.post('/delete_product/:id', productController.deleteProduct)
 
 module.exports = route;
