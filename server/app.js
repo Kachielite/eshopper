@@ -40,7 +40,7 @@ app.use((error, req, res, next) => {
 
 mongoose
   .connect(
-    `mongodb+srv://twiickle:${process.env.MONGODBCRED}@cluster0.pc0jurl.mongodb.net/data?retryWrites=true&w=majority`
+    `mongodb+srv://twiickle:${process.env.MONGODBCRED}@cluster0.pc0jurl.mongodb.net/data?retryWrites=true&w=majority`,{ ignoreUndefined: true }
   )
   .then((res) => {
     app.listen(port, () => {
