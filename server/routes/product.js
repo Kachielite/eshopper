@@ -71,6 +71,9 @@ route.put(
 //Get All Product
 route.get('/products', productController.getAllProducts)
 
+//Fetch All Categories
+route.get('/categories', productController.getAllCategories)
+
 //Delete Product
 route.post('/delete_product/:id', productController.deleteProduct)
 

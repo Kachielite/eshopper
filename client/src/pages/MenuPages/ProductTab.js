@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Dashboard from "../Dashboard";
 import DropDown from "../../components/DropDown";
@@ -8,8 +9,68 @@ import printIcon from "../../assets/icons/Print.svg";
 import arrowLeft from "../../assets/icons/ArrowLeft.svg";
 import arrowRight from "../../assets/icons/ArrowRight.svg";
 import homeIcon from "../../assets/icons/Home.svg";
+import axios from "axios";
+import { LineWave } from "react-loader-spinner";
 
 const ProductTab = () => {
+  const [isLoading, setIsLoading] = useState(false)
+  const [products, setProducts] = useState([]);
+  const [categoriesList, setCategoriesList] = useState([]);
+  const [totalItems, setTotalItems] = useState();
+  const [lastPage, setLastPage] = useState();
+  const [nextPage, setNextPage] = useState();
+  const [previousPage, setPreviousPage] = useState();
+  const [filter, setFilter] = useState({
+    category: "All Categories",
+    quantity: 10,
+    status: "All Status",
+  });
+
+  const filterHandler = (type, item) => {
+    if (type === "category") {
+      setFilter({ ...filter, category: item });
+    } else if (type === "quantity") {
+      setFilter({ ...filter, quantity: item });
+    } else {
+      setFilter({ ...filter, status: item });
+    }
+  };
+
+  useEffect(() => {
+    setIsLoading(true)
+    axios
+      .get(
+        `http://192.168.1.153:3001/v1/products?quantity=${
+          filter.quantity
+        }&page=1&category=${filter.category}&status=${
+          filter.status
+        }`
+      )
+      .then((res) => {
+        setProducts(res.data.products);
+        setTotalItems(res.data.totalNumberOfProducts);
+        setLastPage(res.data.lastPage);
+        setNextPage(res.data.nextPage);
+        setPreviousPage(res.data.previousPage);
+      })
+      .catch((error) => {
+        setIsLoading(false)
+        console.log(error);
+      });
+
+    axios
+      .get("http://192.168.1.153:3001/v1/categories")
+      .then((res) => {
+        setCategoriesList(res.data.category);
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        setIsLoading(false)
+        console.log(error);
+      });
+  }, [filter.quantity, filter.category, filter.status, nextPage]);
+
+  console.log(filter);
   return (
     <Dashboard>
       <div className="flex flex-col px-4 md:px-7 py-6 mb-32 md:mb-24 h-full w-full">
@@ -37,9 +98,27 @@ const ProductTab = () => {
             {/* Filter Container */}
             <div className="flex flex-row space-x-2 items-center">
               <p className="text-text1 text-sm font-normal">Show</p>
-              <DropDown name={"10"} />
-              <DropDown name={"All categories"} />
-              <DropDown name={"All status"} />
+              <DropDown
+                name={"Number"}
+                type="quantity"
+                data={[10, 20, 30, 40, 50, 60, 70, 80, 90, 100]}
+                filterHandler={filterHandler}
+                filter={filter}
+              />
+              <DropDown
+                name={"Categories"}
+                type="category"
+                data={categoriesList}
+                filterHandler={filterHandler}
+                filter={filter}
+              />
+              <DropDown
+                name={"Status"}
+                type="status"
+                data={["Available", "Deleted", "Out of Stock"]}
+                filterHandler={filterHandler}
+                filter={filter}
+              />
             </div>
             {/* Search Container */}
             <div className="flex flex-row space-x-4 items-center">
@@ -62,30 +141,49 @@ const ProductTab = () => {
         </div>
         {/* Table Container */}
         <div className="mt-7 h-full w-full">
-          <Table />
+          <LineWave
+            color="#4fa94d"
+            ariaLabel="line-wave"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+            firstLineColor="#0081FF"
+            middleLineColor="#0081FF"
+            lastLineColor="#0081FF"
+          />
+          {<Table data={products} />}
         </div>
         {/* Pagination Container */}
         <div className="mt-7 h-full w-full flex flex-row justify-between items-center">
           <p className="text-xs md:text-sm text-text2 font-normal">
-            Showing 1 to 10 of 50 items
+            Showing 1 to 10 of {totalItems} items
           </p>
           <div className="w-60 h-10 bg-bg2 rounded-md flex flex-row justify-between items-center">
-            <button>
-              <img src={arrowLeft} alt="previous" />
+            {previousPage && (
+              <button>
+                <img src={arrowLeft} alt="previous" />
+              </button>
+            )}
+            <button className="hover:bg-blue1 hover:rounded-md hover:py-2 hover:px-3 hover:drop-shadow-lg ">
+              <p className="text-text1 text-sm font-medium">{previousPage}</p>
             </button>
             <button className="bg-blue1 rounded-md py-2 px-3 drop-shadow-lg ">
-              <p className="text-white text-sm font-medium">1</p>
+              <p className="text-white text-sm font-medium">
+                {!nextPage ? lastPage : nextPage - 1}
+              </p>
             </button>
-            <button>
-              <p className="text-text1 text-sm font-medium">2</p>
+            <button className="hover:bg-blue1 hover:rounded-md hover:py-2 hover:px-3 hover:drop-shadow-lg ">
+              <p className="text-text1 text-sm font-medium">{nextPage}</p>
             </button>
             <p className="text-text1 text-sm font-medium">...</p>
-            <button>
-              <p className="text-text1 text-sm font-medium">3</p>
+            <button className="hover:bg-blue1 hover:rounded-md hover:py-2 hover:px-3 hover:drop-shadow-lg ">
+              <p className="text-text1 text-sm font-medium">{lastPage}</p>
             </button>
-            <button>
-              <img src={arrowRight} alt="next" />
-            </button>
+            {nextPage && (
+              <button>
+                <img src={arrowRight} alt="next" />
+              </button>
+            )}
           </div>
         </div>
       </div>

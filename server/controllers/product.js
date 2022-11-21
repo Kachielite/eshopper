@@ -58,9 +58,9 @@ exports.getAllProducts = (req, res, next) => {
     query = {
       $and: [{ category: { $eq: category } }, { status: { $eq: status } }],
     };
-  } else if (category && !status) {
+  } else if (category && status.includes('All')) {
     query = { category: { $eq: category } };
-  } else if (!category && status) {
+  } else if (category.includes('All') && status) {
     query = { status: { $eq: status } };
   } else {
     query = {};
@@ -94,6 +94,15 @@ exports.getAllProducts = (req, res, next) => {
       next(error);
     });
 };
+
+exports.getAllCategories = (req, res, next) =>{
+  Product.find().distinct('category', (error, results)=>{
+    if(error){
+      next(error)
+    }
+    res.status(200).json({message:"Categories successfully fetched", category: results})
+  })
+}
 
 exports.addProduct = (req, res, next) => {
   const productName = req.body.product_name;
