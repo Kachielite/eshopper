@@ -17,6 +17,7 @@ const ProductTab = () => {
   const [products, setProducts] = useState([]);
   const [categoriesList, setCategoriesList] = useState([]);
   const [totalItems, setTotalItems] = useState();
+  const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState();
   const [nextPage, setNextPage] = useState();
   const [previousPage, setPreviousPage] = useState();
@@ -36,6 +37,10 @@ const ProductTab = () => {
     }
   };
 
+  const setPageHandler = (pageNumber) => {
+    setPage(pageNumber);
+  };
+
   useEffect(() => {
     setIsLoading(true);
     axios
@@ -50,7 +55,7 @@ const ProductTab = () => {
 
     axios
       .get(
-        `http://192.168.1.153:3001/v1/products?quantity=${filter.quantity}&page=1&category=${filter.category}&status=${filter.status}`,
+        `http://192.168.1.153:3001/v1/products?quantity=${filter.quantity}&page=${page}&category=${filter.category}&status=${filter.status}`,
         { headers: { "content-type": "application/x-www-form-urlencoded" } }
       )
       .then((res) => {
@@ -65,7 +70,7 @@ const ProductTab = () => {
         setIsLoading(false);
         console.log(error);
       });
-  }, [filter.quantity, filter.category, filter.status, nextPage]);
+  }, [filter.quantity, filter.category, filter.status, nextPage, page]);
 
   console.log(filter);
   return (
@@ -164,34 +169,64 @@ const ProductTab = () => {
               <p className="text-xs md:text-sm text-text2 font-normal">
                 Showing 1 to 10 of {totalItems} items
               </p>
-              <div className="h-10 bg-bg2 rounded-md flex flex-row space-x-2 items-center">
+              <div className="h-10 bg-bg2 rounded-md flex flex-row space-x-2 items-center px-3">
                 {previousPage && (
-                  <button>
+                  <button onClick={() => setPageHandler(page - 1)}>
                     <img src={arrowLeft} alt="previous" />
                   </button>
                 )}
-                <button className="hover:bg-blue1 hover:rounded-md hover:py-2 hover:px-3 hover:drop-shadow-lg ">
-                  <p className="text-text1 text-sm font-medium">
-                    {previousPage}
-                  </p>
-                </button>
+                {page > 2 && (
+                  <button
+                    className="group py-2 px-3 hover:bg-blue1 hover:rounded-md hover:py-2 hover:px-3 hover:drop-shadow-lg "
+                    onClick={() => setPageHandler(1)}>
+                    <p className="text-text1 text-sm font-medium group-hover:text-white">
+                      1
+                    </p>
+                  </button>
+                )}
+                {page >= 4 && (
+                  <p className="text-text1 text-sm font-medium">...</p>
+                )}
+                {previousPage && (
+                  <button
+                    className="group py-2 px-3 hover:bg-blue1 hover:rounded-md hover:py-2 hover:px-3 hover:drop-shadow-lg"
+                    onClick={() => setPageHandler(previousPage)}>
+                    <p className="text-text1 text-sm font-medium group-hover:text-white">
+                      {previousPage}
+                    </p>
+                  </button>
+                )}
                 <button className="bg-blue1 rounded-md py-2 px-3 drop-shadow-lg ">
                   <p className="text-white text-sm font-medium">
                     {!nextPage ? lastPage : nextPage - 1}
                   </p>
                 </button>
-                <button className="group py-2 px-3 hover:bg-blue1 hover:rounded-md hover:py-2 hover:px-3 hover:drop-shadow-lg ">
-                  <p className="text-text1 text-sm font-medium group-hover:text-white">{nextPage}</p>
-                </button>
-                <p className="text-text1 text-sm font-medium">...</p>
-                <button className="group py-2 px-3 hover:bg-blue1 hover:rounded-md hover:py-2 hover:px-3 hover:drop-shadow-lg">
-                  <p className="text-text1 text-sm font-medium group-hover:text-white">{lastPage}</p>
-                </button>
-                {nextPage && 
-                  <button>
+                {page < lastPage - 2 && (
+                  <button
+                    className="group py-2 px-3 hover:bg-blue1 hover:rounded-md hover:py-2 hover:px-3 hover:drop-shadow-lg"
+                    onClick={() => setPageHandler(nextPage)}>
+                    <p className="text-text1 text-sm font-medium group-hover:text-white">
+                      {nextPage}
+                    </p>
+                  </button>
+                )}
+                {page <= lastPage - 3 && (
+                  <p className="text-text1 text-sm font-medium">...</p>
+                )}
+                {page !== lastPage && (
+                  <button
+                    className="group py-2 px-3 hover:bg-blue1 hover:rounded-md hover:py-2 hover:px-3 hover:drop-shadow-lg"
+                    onClick={() => setPageHandler(lastPage)}>
+                    <p className="text-text1 text-sm font-medium group-hover:text-white">
+                      {lastPage}
+                    </p>
+                  </button>
+                )}
+                {nextPage && (
+                  <button onClick={() => setPageHandler(page + 1)}>
                     <img src={arrowRight} alt="next" />
                   </button>
-                }
+                )}
               </div>
             </div>
           </div>
