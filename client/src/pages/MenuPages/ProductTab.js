@@ -35,6 +35,7 @@ const ProductTab = () => {
     } else {
       setFilter({ ...filter, status: item });
     }
+    setPage(1);
   };
 
   const setPageHandler = (pageNumber) => {
@@ -167,7 +168,9 @@ const ProductTab = () => {
             {/* Pagination Container */}
             <div className="mt-7 h-full w-full flex flex-row justify-between items-center">
               <p className="text-xs md:text-sm text-text2 font-normal">
-                Showing 1 to 10 of {totalItems} items
+                Showing {page === 1 ? 1 : filter.quantity * (page - 1) + 1} to{" "}
+                {page === 1 ? filter.quantity : filter.quantity * page + 1} of{" "}
+                {totalItems} items
               </p>
               <div className="h-10 bg-bg2 rounded-md flex flex-row space-x-2 items-center px-3">
                 {previousPage && (
