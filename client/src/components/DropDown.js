@@ -3,12 +3,14 @@ import { Menu, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 
 export default function DropDown({ name, data, type, filter, filterHandler }) {
+
+  console.log(data[0])
   
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
         <Menu.Button className="inline-flex w-full justify-center rounded-md border  bg-white px-4 py-2 text-sm font-medium text-text1 shadow-sm hover:bg-gray-50 focus:outline-none ">
-          {filter.category || filter.quantity || filter.status ? (type === "category" ? filter.category : type === "quantity" ? filter.quantity : type === "status" ? filter.status:""): name }
+          {filter.category || filter.quantity || filter.status ? (type === "category" ? filter.category : type === "quantity" ? filter.quantity : type === "status" ? filter.status:""): data[0] }
           <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
         </Menu.Button>
       </div>

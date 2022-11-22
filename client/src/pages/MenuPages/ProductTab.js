@@ -10,10 +10,10 @@ import arrowLeft from "../../assets/icons/ArrowLeft.svg";
 import arrowRight from "../../assets/icons/ArrowRight.svg";
 import homeIcon from "../../assets/icons/Home.svg";
 import axios from "axios";
-import { LineWave } from "react-loader-spinner";
+import { TailSpin } from "react-loader-spinner";
 
 const ProductTab = () => {
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   const [products, setProducts] = useState([]);
   const [categoriesList, setCategoriesList] = useState([]);
   const [totalItems, setTotalItems] = useState();
@@ -37,14 +37,21 @@ const ProductTab = () => {
   };
 
   useEffect(() => {
-    setIsLoading(true)
+    setIsLoading(true);
+    axios
+      .get("http://192.168.1.153:3001/v1/categories")
+      .then((res) => {
+        setCategoriesList(res.data.category);
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        console.log(error);
+      });
+
     axios
       .get(
-        `http://192.168.1.153:3001/v1/products?quantity=${
-          filter.quantity
-        }&page=1&category=${filter.category}&status=${
-          filter.status
-        }`
+        `http://192.168.1.153:3001/v1/products?quantity=${filter.quantity}&page=1&category=${filter.category}&status=${filter.status}`,
+        { headers: { "content-type": "application/x-www-form-urlencoded" } }
       )
       .then((res) => {
         setProducts(res.data.products);
@@ -52,20 +59,10 @@ const ProductTab = () => {
         setLastPage(res.data.lastPage);
         setNextPage(res.data.nextPage);
         setPreviousPage(res.data.previousPage);
+        setIsLoading(false);
       })
       .catch((error) => {
-        setIsLoading(false)
-        console.log(error);
-      });
-
-    axios
-      .get("http://192.168.1.153:3001/v1/categories")
-      .then((res) => {
-        setCategoriesList(res.data.category);
-        setIsLoading(false)
-      })
-      .catch((error) => {
-        setIsLoading(false)
+        setIsLoading(false);
         console.log(error);
       });
   }, [filter.quantity, filter.category, filter.status, nextPage]);
@@ -108,14 +105,14 @@ const ProductTab = () => {
               <DropDown
                 name={"Categories"}
                 type="category"
-                data={categoriesList}
+                data={["All Categories", ...categoriesList]}
                 filterHandler={filterHandler}
                 filter={filter}
               />
               <DropDown
                 name={"Status"}
                 type="status"
-                data={["Available", "Deleted", "Out of Stock"]}
+                data={["All Status", "Available", "Deleted", "Out of Stock"]}
                 filterHandler={filterHandler}
                 filter={filter}
               />
@@ -140,52 +137,65 @@ const ProductTab = () => {
           </div>
         </div>
         {/* Table Container */}
-        <div className="mt-7 h-full w-full">
-          <LineWave
-            color="#4fa94d"
-            ariaLabel="line-wave"
-            wrapperStyle={{}}
+        {isLoading ? (
+          <TailSpin
+            height="100"
+            width="100"
+            color="#0081FF"
+            ariaLabel="tail-spin-loading"
+            radius="1"
+            wrapperStyle={{
+              width: "100%",
+              height: "55vh",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
             wrapperClass=""
             visible={true}
-            firstLineColor="#0081FF"
-            middleLineColor="#0081FF"
-            lastLineColor="#0081FF"
           />
-          {<Table data={products} />}
-        </div>
-        {/* Pagination Container */}
-        <div className="mt-7 h-full w-full flex flex-row justify-between items-center">
-          <p className="text-xs md:text-sm text-text2 font-normal">
-            Showing 1 to 10 of {totalItems} items
-          </p>
-          <div className="w-60 h-10 bg-bg2 rounded-md flex flex-row justify-between items-center">
-            {previousPage && (
-              <button>
-                <img src={arrowLeft} alt="previous" />
-              </button>
-            )}
-            <button className="hover:bg-blue1 hover:rounded-md hover:py-2 hover:px-3 hover:drop-shadow-lg ">
-              <p className="text-text1 text-sm font-medium">{previousPage}</p>
-            </button>
-            <button className="bg-blue1 rounded-md py-2 px-3 drop-shadow-lg ">
-              <p className="text-white text-sm font-medium">
-                {!nextPage ? lastPage : nextPage - 1}
+        ) : (
+          <div>
+            <div className="mt-7 min-h-[38rem] w-full">
+              <Table data={products} />
+            </div>
+            {/* Pagination Container */}
+            <div className="mt-7 h-full w-full flex flex-row justify-between items-center">
+              <p className="text-xs md:text-sm text-text2 font-normal">
+                Showing 1 to 10 of {totalItems} items
               </p>
-            </button>
-            <button className="hover:bg-blue1 hover:rounded-md hover:py-2 hover:px-3 hover:drop-shadow-lg ">
-              <p className="text-text1 text-sm font-medium">{nextPage}</p>
-            </button>
-            <p className="text-text1 text-sm font-medium">...</p>
-            <button className="hover:bg-blue1 hover:rounded-md hover:py-2 hover:px-3 hover:drop-shadow-lg ">
-              <p className="text-text1 text-sm font-medium">{lastPage}</p>
-            </button>
-            {nextPage && (
-              <button>
-                <img src={arrowRight} alt="next" />
-              </button>
-            )}
+              <div className="h-10 bg-bg2 rounded-md flex flex-row space-x-2 items-center">
+                {previousPage && (
+                  <button>
+                    <img src={arrowLeft} alt="previous" />
+                  </button>
+                )}
+                <button className="hover:bg-blue1 hover:rounded-md hover:py-2 hover:px-3 hover:drop-shadow-lg ">
+                  <p className="text-text1 text-sm font-medium">
+                    {previousPage}
+                  </p>
+                </button>
+                <button className="bg-blue1 rounded-md py-2 px-3 drop-shadow-lg ">
+                  <p className="text-white text-sm font-medium">
+                    {!nextPage ? lastPage : nextPage - 1}
+                  </p>
+                </button>
+                <button className="group py-2 px-3 hover:bg-blue1 hover:rounded-md hover:py-2 hover:px-3 hover:drop-shadow-lg ">
+                  <p className="text-text1 text-sm font-medium group-hover:text-white">{nextPage}</p>
+                </button>
+                <p className="text-text1 text-sm font-medium">...</p>
+                <button className="group py-2 px-3 hover:bg-blue1 hover:rounded-md hover:py-2 hover:px-3 hover:drop-shadow-lg">
+                  <p className="text-text1 text-sm font-medium group-hover:text-white">{lastPage}</p>
+                </button>
+                {nextPage && 
+                  <button>
+                    <img src={arrowRight} alt="next" />
+                  </button>
+                }
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </Dashboard>
   );
