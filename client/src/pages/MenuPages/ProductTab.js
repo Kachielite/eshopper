@@ -26,6 +26,9 @@ const ProductTab = () => {
     quantity: 10,
     status: "All Status",
   });
+  const [sortedArray, setSortedArray] = useState(products);
+  const [sortOrder, setSortOrder] = useState("desc");
+  const [column, setColumn] = useState("");
 
   const filterHandler = (type, item) => {
     if (type === "category") {
@@ -40,6 +43,58 @@ const ProductTab = () => {
 
   const setPageHandler = (pageNumber) => {
     setPage(pageNumber);
+  };
+
+  console.log(products);
+  console.log(sortedArray);
+
+  const sortArrayHandler = (property) => {
+    setSortOrder("asc");
+    setColumn(property);
+
+    if (property === "date" || property === "price") {
+      if (sortOrder === "desc") {
+        let array = [...products].sort((a, b) => {
+          if (property === "date") {
+            a = new Date(a.createdAt);
+            b = new Date(b.createdAt);
+          } else {
+            a = a.price.slice(1);
+            b = b.price.slice(1);
+          }
+          return a - b;
+        });
+        setSortedArray(array);
+      } else {
+        setSortOrder("desc");
+        let array = [...products].sort((a, b) => {
+          if (property === "date") {
+            a = new Date(a.createdAt);
+            b = new Date(b.createdAt);
+          } else {
+            a = a.price.slice(1);
+            b = b.price.slice(1);
+          }
+          return b - a;
+        });
+        setSortedArray(array);
+      }
+    } else {
+      if (sortOrder === "desc") {
+        let array = [...products].sort((a, b) =>
+          a[property] > b[property] ? 1 : b[property] > a[property] ? -1 : 0
+        );
+        setSortedArray(array);
+      } else {
+        setSortOrder("desc");
+        let array = [...products]
+          .sort((a, b) =>
+            a[property] > b[property] ? 1 : b[property] > a[property] ? -1 : 0
+          )
+          .reverse();
+        setSortedArray(array);
+      }
+    }
   };
 
   useEffect(() => {
@@ -73,7 +128,6 @@ const ProductTab = () => {
       });
   }, [filter.quantity, filter.category, filter.status, nextPage, page]);
 
-  console.log(filter);
   return (
     <Dashboard>
       <div className="flex flex-col px-4 md:px-7 py-6 mb-32 md:mb-24 h-full w-full">
@@ -89,7 +143,7 @@ const ProductTab = () => {
             </div>
             <div className="flex flex-row space-x-6 items-center">
               <div className="w-10 h-10 rounded-full bg-bg2 flex justify-center items-center cursor-pointer">
-                <img src={printIcon} alt="print" className="w-6 h-6" />
+                <img src={printIcon} alt="print" className="w-6 h-6" onClick={() => window.print()}/>
               </div>
               <div className="w-10 h-10 rounded-full bg-bg2 flex justify-center items-center cursor-pointer">
                 <img src={importIcon} alt="import" className="w-6 h-6" />
@@ -163,14 +217,23 @@ const ProductTab = () => {
         ) : (
           <div>
             <div className="mt-7 min-h-[38rem] w-full">
-              <Table data={products} />
+              <Table
+                data={sortedArray.length === 0 ? products : sortedArray}
+                sortArrayHandler={sortArrayHandler}
+                sortOrder={sortOrder}
+                column={column}
+              />
             </div>
             {/* Pagination Container */}
             <div className="mt-7 h-full w-full flex flex-row justify-between items-center">
               <p className="text-xs md:text-sm text-text2 font-normal">
                 Showing {page === 1 ? 1 : filter.quantity * (page - 1) + 1} to{" "}
-                {page === 1 ? filter.quantity : filter.quantity * page + 1} of{" "}
-                {totalItems} items
+                {page === lastPage
+                  ? totalItems
+                  : page === 1
+                  ? filter.quantity
+                  : filter.quantity * page + 1}{" "}
+                of {totalItems} items
               </p>
               <div className="h-10 bg-bg2 rounded-md flex flex-row space-x-2 items-center px-3">
                 {previousPage && (

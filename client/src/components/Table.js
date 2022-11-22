@@ -1,8 +1,7 @@
 import arrowDownIcon from "../assets/icons/ArrowDown.svg";
 
-const Table = ({data}) => {
 
-
+const Table = ({data, sortArrayHandler, sortOrder, column}) => {
 
 
   return (
@@ -28,7 +27,7 @@ const Table = ({data}) => {
                     className="text-sm font-medium text-text1 px-6 pb-3.5 pt-4 text-left ">
                     <div className="flex flex-row item-center">
                       <h3>PRODUCT NAME</h3>
-                      <img src={arrowDownIcon} alt="sort" />
+                      <img src={arrowDownIcon} alt="sort" onClick={() => sortArrayHandler("product_name")} className={column === "product_name" && sortOrder === "asc" ? "rotate-180 duration-100 ":" duration"}/>
                     </div>
                   </th>
                   <th
@@ -36,7 +35,7 @@ const Table = ({data}) => {
                     className="text-sm font-medium text-text1 px-6 pb-3.5 pt-4 text-left">
                     <div className="flex flex-row items-center">
                       <h3>CATEGORY</h3>
-                      <img src={arrowDownIcon} alt="sort" />
+                      <img src={arrowDownIcon} alt="sort" onClick={() => sortArrayHandler("category")} className={column === "category" && sortOrder === "asc" ? "rotate-180 duration-100 ":" duration"}/>
                     </div>
                   </th>
                   <th
@@ -44,7 +43,7 @@ const Table = ({data}) => {
                     className="text-sm font-medium text-text1 px-6 pb-3.5 pt-4 text-left">
                     <div className="flex flex-row items-center">
                       <h3>PRICE</h3>
-                      <img src={arrowDownIcon} alt="sort" />
+                      <img src={arrowDownIcon} alt="sort" onClick={() => sortArrayHandler("price")} className={column === "price" && sortOrder === "asc" ? "rotate-180 duration-100 ":" duration"}/>
                     </div>
                   </th>
                   <th
@@ -52,7 +51,7 @@ const Table = ({data}) => {
                     className="text-sm font-medium text-text1 px-6 pb-3.5 pt-4 text-left">
                     <div className="flex flex-row items-center">
                       <h3>DATE</h3>
-                      <img src={arrowDownIcon} alt="sort" />
+                      <img src={arrowDownIcon} alt="sort" onClick={() => sortArrayHandler("date")} className={column === "date" && sortOrder === "asc" ? "rotate-180 duration-100 ":" duration"}/>
                     </div>
                   </th>
                   <th
@@ -60,7 +59,7 @@ const Table = ({data}) => {
                     className="text-sm font-medium text-text1 px-6 pb-3.5 pt-4 text-left">
                     <div className="flex flex-row items-center">
                       <h3>STATUS</h3>
-                      <img src={arrowDownIcon} alt="sort" />
+                      <img src={arrowDownIcon} alt="sort" onClick={() => sortArrayHandler("status")} className={column === "status" && sortOrder === "asc" ? "rotate-180 duration-100 ":" duration"}/>
                     </div>
                   </th>
                   <th

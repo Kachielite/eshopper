@@ -4,7 +4,6 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid";
 
 export default function DropDown({ name, data, type, filter, filterHandler }) {
 
-  console.log(data[0])
   
   return (
     <Menu as="div" className="relative inline-block text-left">
