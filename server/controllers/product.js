@@ -3,6 +3,9 @@ const { validationResult } = require("express-validator");
 const cloudinary = require("cloudinary").v2;
 require("dotenv").config();
 const deleteFile = require("../utils/deleteImage");
+const { Parser } = require("json2csv");
+const fs = require("fs");
+const path = require("path");
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -237,6 +240,107 @@ exports.deleteProduct = (req, res, next) => {
     })
     .then((results) => {
       res.status(200).json({ message: "Product successfully deleted" });
+    })
+    .catch((error) => {
+      if (!error.statusCode) {
+        error.statusCode = 500;
+      }
+      next(error);
+    });
+};
+
+exports.downloadCSV = (req, res, next) => {
+  const category = req.query.category;
+  const status = req.query.status;
+
+  let query;
+  if (category.includes("All") && status.includes("All")) {
+    query = {};
+  } else {
+    if ((category && !status) || (category && status.includes("All"))) {
+      query = { category: { $eq: category } };
+    } else if ((!category && status) || (category.includes("All") && status)) {
+      query = { status: { $eq: status } };
+    } else if (category && status) {
+      query = {
+        $and: [{ category: { $eq: category } }, { status: { $eq: status } }],
+      };
+    } else {
+      query = {};
+    }
+  }
+
+  const fields = ["PRODUCT NAME", "CATEGORY", "PRICE", "DATE", "STATUS"];
+  const opts = { fields };
+  const transformOpts = {};
+  const asyncOpts = {};
+
+  //For unique file name
+  const dateTime = new Date()
+    .toISOString()
+    .slice(-24)
+    .replace(/\D/g, "")
+    .slice(0, 14);
+
+  const rootDirectory = path.dirname(require.main.filename);
+  const filePath = path.join(
+    rootDirectory,
+    "exports",
+    "csv-" + dateTime + ".csv"
+  );
+
+  Product.find(query)
+    .select({ product_name: 1, category: 1, price: 1, status: 1, createdAt: 1 })
+    .then((results) => {
+      const json2csv = new Parser();
+      const csv = json2csv.parse(results);
+      console.log(`csv ${csv}`);
+      fs.promises.writeFile(filePath, csv);
+    })
+    .then(() => {
+      res.setHeader("Content-disposition", "attachment; filename=data.csv");
+      res.setHeader("Content-Type", "text/csv");
+      res.status(200).download(filePath);
+    })
+    .catch((error) => {
+      if (!error.statusCode) {
+        error.statusCode = 500;
+      }
+      next(error);
+    });
+};
+
+//Search Product
+exports.searchProduct = (req, res, next) => {
+  const query = req.body.query;
+
+  Product.aggregate([{
+    $search: {
+      compound:{
+        should:[{
+          autocomplete: {
+            query: query,
+            path: "product_name",
+            fuzzy: {
+              maxEdits: 2,
+              prefixLength: 3,
+            },
+          },
+        },{
+          autocomplete: {
+            query: query,
+            path: "category",
+            fuzzy: {
+              maxEdits: 2,
+              prefixLength: 3,
+            },
+          },
+        }]
+      }
+    },
+  },])
+    .then((results) => {
+      res.status(200).json({ searchResults: results });
     })
     .catch((error) => {
       if (!error.statusCode) {

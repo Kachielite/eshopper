@@ -71,8 +71,14 @@ route.put(
 //Get All Product
 route.get('/products', productController.getAllProducts)
 
+//Download
+route.get('/products/download', productController.downloadCSV)
+
+//Search
+route.post('/products/search', productController.searchProduct)
+
 //Fetch All Categories
-route.get('/categories', productController.getAllCategories)
+route.get('/products/categories', productController.getAllCategories)
 
 //Delete Product
 route.post('/delete_product/:id', productController.deleteProduct)

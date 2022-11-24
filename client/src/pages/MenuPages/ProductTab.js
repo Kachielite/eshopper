@@ -14,7 +14,6 @@ import { TailSpin } from "react-loader-spinner";
 
 const ProductTab = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [products, setProducts] = useState([]);
   const [categoriesList, setCategoriesList] = useState([]);
   const [totalItems, setTotalItems] = useState();
   const [page, setPage] = useState(1);
@@ -26,17 +25,23 @@ const ProductTab = () => {
     quantity: 10,
     status: "All Status",
   });
-  const [sortedArray, setSortedArray] = useState(products);
+  const [sortedArray, setSortedArray] = useState([]);
   const [sortOrder, setSortOrder] = useState("desc");
   const [column, setColumn] = useState("");
 
   const filterHandler = (type, item) => {
     if (type === "category") {
-      setFilter({ ...filter, category: item });
+      setFilter((prevState) => { 
+        return {...prevState, category: item}
+       });
     } else if (type === "quantity") {
-      setFilter({ ...filter, quantity: item });
+      setFilter((prevState) => { 
+        return {...prevState, quantity: item}
+       });
     } else {
-      setFilter({ ...filter, status: item });
+      setFilter((prevState) => { 
+        return {...prevState, status: item}
+       });
     }
     setPage(1);
   };
@@ -45,7 +50,6 @@ const ProductTab = () => {
     setPage(pageNumber);
   };
 
-  console.log(products);
   console.log(sortedArray);
 
   const sortArrayHandler = (property) => {
@@ -54,7 +58,7 @@ const ProductTab = () => {
 
     if (property === "date" || property === "price") {
       if (sortOrder === "desc") {
-        let array = [...products].sort((a, b) => {
+        let array = [...sortedArray].sort((a, b) => {
           if (property === "date") {
             a = new Date(a.createdAt);
             b = new Date(b.createdAt);
@@ -67,7 +71,7 @@ const ProductTab = () => {
         setSortedArray(array);
       } else {
         setSortOrder("desc");
-        let array = [...products].sort((a, b) => {
+        let array = [...sortedArray].sort((a, b) => {
           if (property === "date") {
             a = new Date(a.createdAt);
             b = new Date(b.createdAt);
@@ -81,13 +85,13 @@ const ProductTab = () => {
       }
     } else {
       if (sortOrder === "desc") {
-        let array = [...products].sort((a, b) =>
+        let array = [...sortedArray].sort((a, b) =>
           a[property] > b[property] ? 1 : b[property] > a[property] ? -1 : 0
         );
         setSortedArray(array);
       } else {
         setSortOrder("desc");
-        let array = [...products]
+        let array = [...sortedArray]
           .sort((a, b) =>
             a[property] > b[property] ? 1 : b[property] > a[property] ? -1 : 0
           )
@@ -100,7 +104,7 @@ const ProductTab = () => {
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get("http://192.168.1.153:3001/v1/categories")
+      .get(`${process.env.REACT_APP_ENDPOINT}/v1/categories`)
       .then((res) => {
         setCategoriesList(res.data.category);
       })
@@ -111,11 +115,11 @@ const ProductTab = () => {
 
     axios
       .get(
-        `http://192.168.1.153:3001/v1/products?quantity=${filter.quantity}&page=${page}&category=${filter.category}&status=${filter.status}`,
+        `${process.env.REACT_APP_ENDPOINT}/v1/products?quantity=${filter.quantity}&page=${page}&category=${filter.category}&status=${filter.status}`,
         { headers: { "content-type": "application/x-www-form-urlencoded" } }
       )
       .then((res) => {
-        setProducts(res.data.products);
+        setSortedArray(res.data.products);
         setTotalItems(res.data.totalNumberOfProducts);
         setLastPage(res.data.lastPage);
         setNextPage(res.data.nextPage);
@@ -143,11 +147,18 @@ const ProductTab = () => {
             </div>
             <div className="flex flex-row space-x-6 items-center">
               <div className="w-10 h-10 rounded-full bg-bg2 flex justify-center items-center cursor-pointer">
-                <img src={printIcon} alt="print" className="w-6 h-6" onClick={() => window.print()}/>
+                <img
+                  src={printIcon}
+                  alt="print"
+                  className="w-6 h-6"
+                  onClick={() => window.print()}
+                />
               </div>
-              <div className="w-10 h-10 rounded-full bg-bg2 flex justify-center items-center cursor-pointer">
-                <img src={importIcon} alt="import" className="w-6 h-6" />
-              </div>
+              <a href={`${process.env.REACT_APP_ENDPOINT}/v1/downloads/products?category=${filter.category}&status=${filter.status}`} target="_blank" rel="noopener noreferrer" download>
+                <div className="w-10 h-10 rounded-full bg-bg2 flex justify-center items-center cursor-pointer">
+                  <img src={importIcon} alt="import" className="w-6 h-6" />
+                </div>
+              </a>
             </div>
           </div>
           {/* Filter/Search Container */}
@@ -218,7 +229,7 @@ const ProductTab = () => {
           <div>
             <div className="mt-7 min-h-[38rem] w-full">
               <Table
-                data={sortedArray.length === 0 ? products : sortedArray}
+                data={sortedArray.length === 0 ? sortedArray : sortedArray}
                 sortArrayHandler={sortArrayHandler}
                 sortOrder={sortOrder}
                 column={column}
