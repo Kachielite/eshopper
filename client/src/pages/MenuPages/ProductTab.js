@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import Dashboard from "../Dashboard";
 import DropDown from "../../components/DropDown";
 import Table from "../../components/Table";
-import searchIcon from "../../assets/icons/Search.svg";
 import importIcon from "../../assets/icons/Import.svg";
 import printIcon from "../../assets/icons/Print.svg";
 import arrowLeft from "../../assets/icons/ArrowLeft.svg";
@@ -11,6 +10,7 @@ import arrowRight from "../../assets/icons/ArrowRight.svg";
 import homeIcon from "../../assets/icons/Home.svg";
 import axios from "axios";
 import { TailSpin } from "react-loader-spinner";
+import SearchBar from "../../components/searchBar";
 
 const ProductTab = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -104,7 +104,7 @@ const ProductTab = () => {
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get(`${process.env.REACT_APP_ENDPOINT}/v1/categories`)
+      .get(`${process.env.REACT_APP_ENDPOINT}/v1/products/categories`)
       .then((res) => {
         setCategoriesList(res.data.category);
       })
@@ -154,7 +154,7 @@ const ProductTab = () => {
                   onClick={() => window.print()}
                 />
               </div>
-              <a href={`${process.env.REACT_APP_ENDPOINT}/v1/downloads/products?category=${filter.category}&status=${filter.status}`} target="_blank" rel="noopener noreferrer" download>
+              <a href={`${process.env.REACT_APP_ENDPOINT}/v1/products/download?category=${filter.category}&status=${filter.status}`} target="_blank" rel="noopener noreferrer" download>
                 <div className="w-10 h-10 rounded-full bg-bg2 flex justify-center items-center cursor-pointer">
                   <img src={importIcon} alt="import" className="w-6 h-6" />
                 </div>
@@ -189,16 +189,8 @@ const ProductTab = () => {
               />
             </div>
             {/* Search Container */}
-            <div className="flex flex-row space-x-4 items-center">
-              <div className="flex flex-row items-center bg-bg2 w-72 h-10 py-2.5 px-3.5 rounded-lg shadow-sm">
-                <img src={searchIcon} alt="search" className="mr-1.5" />
-                <input
-                  type="text"
-                  name="search"
-                  placeholder="Search product"
-                  className="bg-bg2 outline-none text-text1 text-base font-normal placeholder:text-sm"
-                />
-              </div>
+            <div className="flex flex-row space-x-4 items-center relative">
+              <SearchBar/>
               <button className="w-10 h-10 bg-blue1 shadow-2xl shadow-cyan-600 rounded-full">
                 <Link to="/products/add_product">
                   <p className="text-white font-extrabold text-4xl">+</p>
