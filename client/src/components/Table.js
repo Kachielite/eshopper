@@ -1,8 +1,13 @@
+import {useSelector, useDispatch} from "react-redux";
+import { checkAllProductsHandler, checkProductHandler } from "../store/slices/product";
 import arrowDownIcon from "../assets/icons/ArrowDown.svg";
 
+const Table = ({ data, sortArrayHandler, sortOrder, column }) => {
 
-const Table = ({data, sortArrayHandler, sortOrder, column}) => {
-
+  const dispatch = useDispatch()
+  const checkedProduct = useSelector(state => state.product.checkedProduct)
+  const checked = useSelector(state => state.product.checked)
+  console.log(checkedProduct)
 
   return (
     <div className="flex flex-col bg-bg2 rounded-md overflow-x-hidden">
@@ -15,7 +20,13 @@ const Table = ({data, sortArrayHandler, sortOrder, column}) => {
                   <th
                     scope="col"
                     className="text-sm font-medium  px-6 pb-3.5 pt-4 text-left">
-                    <input type="checkbox" name="" id="" />
+                    <input
+                      type="checkbox"
+                      name=""
+                      id=""
+                      onChange={() => dispatch(checkAllProductsHandler(data))}
+                      checked={checked}
+                    />
                   </th>
                   <th
                     scope="col"
@@ -27,7 +38,16 @@ const Table = ({data, sortArrayHandler, sortOrder, column}) => {
                     className="text-sm font-medium text-text1 px-6 pb-3.5 pt-4 text-left ">
                     <div className="flex flex-row item-center">
                       <h3>PRODUCT NAME</h3>
-                      <img src={arrowDownIcon} alt="sort" onClick={() => sortArrayHandler("product_name")} className={column === "product_name" && sortOrder === "asc" ? "rotate-180 duration-100 ":" duration"}/>
+                      <img
+                        src={arrowDownIcon}
+                        alt="sort"
+                        onClick={() => sortArrayHandler("product_name")}
+                        className={
+                          column === "product_name" && sortOrder === "asc"
+                            ? "rotate-180 duration-100 "
+                            : " duration"
+                        }
+                      />
                     </div>
                   </th>
                   <th
@@ -35,7 +55,16 @@ const Table = ({data, sortArrayHandler, sortOrder, column}) => {
                     className="text-sm font-medium text-text1 px-6 pb-3.5 pt-4 text-left">
                     <div className="flex flex-row items-center">
                       <h3>CATEGORY</h3>
-                      <img src={arrowDownIcon} alt="sort" onClick={() => sortArrayHandler("category")} className={column === "category" && sortOrder === "asc" ? "rotate-180 duration-100 ":" duration"}/>
+                      <img
+                        src={arrowDownIcon}
+                        alt="sort"
+                        onClick={() => sortArrayHandler("category")}
+                        className={
+                          column === "category" && sortOrder === "asc"
+                            ? "rotate-180 duration-100 "
+                            : " duration"
+                        }
+                      />
                     </div>
                   </th>
                   <th
@@ -43,7 +72,16 @@ const Table = ({data, sortArrayHandler, sortOrder, column}) => {
                     className="text-sm font-medium text-text1 px-6 pb-3.5 pt-4 text-left">
                     <div className="flex flex-row items-center">
                       <h3>PRICE</h3>
-                      <img src={arrowDownIcon} alt="sort" onClick={() => sortArrayHandler("price")} className={column === "price" && sortOrder === "asc" ? "rotate-180 duration-100 ":" duration"}/>
+                      <img
+                        src={arrowDownIcon}
+                        alt="sort"
+                        onClick={() => sortArrayHandler("price")}
+                        className={
+                          column === "price" && sortOrder === "asc"
+                            ? "rotate-180 duration-100 "
+                            : " duration"
+                        }
+                      />
                     </div>
                   </th>
                   <th
@@ -51,7 +89,16 @@ const Table = ({data, sortArrayHandler, sortOrder, column}) => {
                     className="text-sm font-medium text-text1 px-6 pb-3.5 pt-4 text-left">
                     <div className="flex flex-row items-center">
                       <h3>DATE</h3>
-                      <img src={arrowDownIcon} alt="sort" onClick={() => sortArrayHandler("date")} className={column === "date" && sortOrder === "asc" ? "rotate-180 duration-100 ":" duration"}/>
+                      <img
+                        src={arrowDownIcon}
+                        alt="sort"
+                        onClick={() => sortArrayHandler("date")}
+                        className={
+                          column === "date" && sortOrder === "asc"
+                            ? "rotate-180 duration-100 "
+                            : " duration"
+                        }
+                      />
                     </div>
                   </th>
                   <th
@@ -59,7 +106,16 @@ const Table = ({data, sortArrayHandler, sortOrder, column}) => {
                     className="text-sm font-medium text-text1 px-6 pb-3.5 pt-4 text-left">
                     <div className="flex flex-row items-center">
                       <h3>STATUS</h3>
-                      <img src={arrowDownIcon} alt="sort" onClick={() => sortArrayHandler("status")} className={column === "status" && sortOrder === "asc" ? "rotate-180 duration-100 ":" duration"}/>
+                      <img
+                        src={arrowDownIcon}
+                        alt="sort"
+                        onClick={() => sortArrayHandler("status")}
+                        className={
+                          column === "status" && sortOrder === "asc"
+                            ? "rotate-180 duration-100 "
+                            : " duration"
+                        }
+                      />
                     </div>
                   </th>
                   <th
@@ -69,14 +125,21 @@ const Table = ({data, sortArrayHandler, sortOrder, column}) => {
               </thead>
               <tbody>
                 {data.map((item, index) => {
+                  let id = item._id;
                   return (
                     <tr className="border-b" key={index}>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         <input
                           type="checkbox"
                           name=""
-                          id=""
-                          className="outline-none"
+                          id={id}
+                          className="outline-none border-none"
+                          onChange={(e) => dispatch(checkProductHandler({id: e.target.id, checked: e.target.checked}))}
+                          checked={
+                            checked || checkedProduct.find((e) => e.id === id)
+                              ? true
+                              : false
+                          }
                         />
                       </td>
                       <td className="text-sm text-text2 font-normal px-6 py-4 whitespace-nowrap">
@@ -92,13 +155,19 @@ const Table = ({data, sortArrayHandler, sortOrder, column}) => {
                         ${Math.ceil(item.price.slice(1))}
                       </td>
                       <td className="text-sm text-text2 font-normal px-6 py-4 whitespace-nowrap">
-                        {new Date(item.createdAt.replace(/^"(.*)"$/, '$1')).toLocaleDateString('en-GB')}
+                        {new Date(
+                          item.createdAt.replace(/^"(.*)"$/, "$1")
+                        ).toLocaleDateString("en-GB")}
                       </td>
                       <td className="text-sm text-text1 font-normal px-6 py-4 whitespace-nowrap">
                         <div className="flex flex-row">
                           <div
                             className={`my-auto w-1.5 h-1.5 rounded-full ${
-                              item.status === "Deleted" ? "bg-red" : item.status === "Available"? "bg-green" : "bg-bg4"
+                              item.status === "Deleted"
+                                ? "bg-red"
+                                : item.status === "Available"
+                                ? "bg-green"
+                                : "bg-bg4"
                             } mr-2`}></div>
                           {item.status}
                         </div>

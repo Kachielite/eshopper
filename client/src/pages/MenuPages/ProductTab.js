@@ -50,7 +50,6 @@ const ProductTab = () => {
     setPage(pageNumber);
   };
 
-  console.log(sortedArray);
 
   const sortArrayHandler = (property) => {
     setSortOrder("asc");
