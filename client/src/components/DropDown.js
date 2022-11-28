@@ -1,9 +1,14 @@
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { useSelector, useDispatch } from "react-redux";
+import { filterHandler } from "../store/slices/product";
 
-export default function DropDown({ name, data, type, filter, filterHandler }) {
+export default function DropDown({ data, type}) {
+  const productData = useSelector(state => state.product)
+  const {filter} = productData
 
+  const dispatch = useDispatch()
   
   return (
     <Menu as="div" className="relative inline-block text-left">
@@ -27,7 +32,7 @@ export default function DropDown({ name, data, type, filter, filterHandler }) {
             {data.map((item, index) => {
               return (
                 <Menu.Item key={index}>
-                  <p onClick={() => filterHandler(type, item)} className="text-center text-text1 text-md py-1 font-medium hover:bg-bg4 cursor-pointer">
+                  <p onClick={() => dispatch(filterHandler({type: type, item: item}))} className="text-center text-text1 text-md py-1 font-medium hover:bg-bg4 cursor-pointer">
                     {item}
                   </p>
                 </Menu.Item>

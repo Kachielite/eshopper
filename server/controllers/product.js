@@ -36,14 +36,18 @@ const uploadPhoto = (photoArray) => {
 const deletePhoto = (photoArray) => {
   return new Promise((resolve, reject) => {
     photoArray.map((photo) => {
-      cloudinary.uploader
-        .destroy(photo.id)
-        .then((results) => {
-          resolve(true);
-        })
-        .catch((error) => {
-          reject(error);
-        });
+      if (!photo.id) {
+        resolve(true);
+      } else {
+        cloudinary.uploader
+          .destroy(photo.id)
+          .then((results) => {
+            resolve(true);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      }
     });
   });
 };
@@ -229,17 +233,17 @@ exports.editProduct = (req, res, next) => {
 };
 
 exports.deleteProduct = (req, res, next) => {
-  const id = req.params.id;
+  const ids = req.params.ids;
 
   Product.findById(id)
     .then((product) => {
       deletePhoto(product.product_images);
     })
     .then(() => {
-      return Product.findOneAndRemove({ _id: id });
+      return Product.deleteMany({_id:{$in:ids}});
     })
     .then((results) => {
-      res.status(200).json({ message: "Product successfully deleted" });
+      res.status(200).json({ message: "Products successfully deleted" });
     })
     .catch((error) => {
       if (!error.statusCode) {
@@ -314,31 +318,36 @@ exports.downloadCSV = (req, res, next) => {
 exports.searchProduct = (req, res, next) => {
   const query = req.body.query;
 
-  Product.aggregate([{
-    $search: {
-      compound:{
-        should:[{
-          autocomplete: {
-            query: query,
-            path: "product_name",
-            fuzzy: {
-              maxEdits: 2,
-              prefixLength: 3,
+  Product.aggregate([
+    {
+      $search: {
+        compound: {
+          should: [
+            {
+              autocomplete: {
+                query: query,
+                path: "product_name",
+                fuzzy: {
+                  maxEdits: 2,
+                  prefixLength: 3,
+                },
+              },
             },
-          },
-        },{
-          autocomplete: {
-            query: query,
-            path: "category",
-            fuzzy: {
-              maxEdits: 2,
-              prefixLength: 3,
+            {
+              autocomplete: {
+                query: query,
+                path: "category",
+                fuzzy: {
+                  maxEdits: 2,
+                  prefixLength: 3,
+                },
+              },
             },
-          },
-        }]
-      }
+          ],
+        },
+      },
     },
-  },])
+  ])
     .then((results) => {
       res.status(200).json({ searchResults: results });
     })

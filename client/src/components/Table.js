@@ -1,13 +1,12 @@
 import {useSelector, useDispatch} from "react-redux";
-import { checkAllProductsHandler, checkProductHandler } from "../store/slices/product";
+import { checkAllProductsHandler, checkProductHandler, sortProductsHandler } from "../store/slices/product";
 import arrowDownIcon from "../assets/icons/ArrowDown.svg";
 
-const Table = ({ data, sortArrayHandler, sortOrder, column }) => {
+const Table = () => {
 
   const dispatch = useDispatch()
-  const checkedProduct = useSelector(state => state.product.checkedProduct)
-  const checked = useSelector(state => state.product.checked)
-  console.log(checkedProduct)
+  const productData = useSelector(state => state.product)
+  const {checked, checkedProduct, sortedArray, column, sortOrder} = productData
 
   return (
     <div className="flex flex-col bg-bg2 rounded-md overflow-x-hidden">
@@ -24,7 +23,7 @@ const Table = ({ data, sortArrayHandler, sortOrder, column }) => {
                       type="checkbox"
                       name=""
                       id=""
-                      onChange={() => dispatch(checkAllProductsHandler(data))}
+                      onChange={() => dispatch(checkAllProductsHandler(sortedArray))}
                       checked={checked}
                     />
                   </th>
@@ -41,7 +40,7 @@ const Table = ({ data, sortArrayHandler, sortOrder, column }) => {
                       <img
                         src={arrowDownIcon}
                         alt="sort"
-                        onClick={() => sortArrayHandler("product_name")}
+                        onClick={() => dispatch(sortProductsHandler({property:"product_name"}))}
                         className={
                           column === "product_name" && sortOrder === "asc"
                             ? "rotate-180 duration-100 "
@@ -58,7 +57,7 @@ const Table = ({ data, sortArrayHandler, sortOrder, column }) => {
                       <img
                         src={arrowDownIcon}
                         alt="sort"
-                        onClick={() => sortArrayHandler("category")}
+                        onClick={() => dispatch(sortProductsHandler({property: "category"}))}
                         className={
                           column === "category" && sortOrder === "asc"
                             ? "rotate-180 duration-100 "
@@ -75,7 +74,7 @@ const Table = ({ data, sortArrayHandler, sortOrder, column }) => {
                       <img
                         src={arrowDownIcon}
                         alt="sort"
-                        onClick={() => sortArrayHandler("price")}
+                        onClick={() => dispatch(sortProductsHandler({property: "price"}))}
                         className={
                           column === "price" && sortOrder === "asc"
                             ? "rotate-180 duration-100 "
@@ -92,7 +91,7 @@ const Table = ({ data, sortArrayHandler, sortOrder, column }) => {
                       <img
                         src={arrowDownIcon}
                         alt="sort"
-                        onClick={() => sortArrayHandler("date")}
+                        onClick={() => dispatch(sortProductsHandler({property:"date"}))}
                         className={
                           column === "date" && sortOrder === "asc"
                             ? "rotate-180 duration-100 "
@@ -109,7 +108,7 @@ const Table = ({ data, sortArrayHandler, sortOrder, column }) => {
                       <img
                         src={arrowDownIcon}
                         alt="sort"
-                        onClick={() => sortArrayHandler("status")}
+                        onClick={() => dispatch(sortProductsHandler({property:"status"}))}
                         className={
                           column === "status" && sortOrder === "asc"
                             ? "rotate-180 duration-100 "
@@ -124,7 +123,7 @@ const Table = ({ data, sortArrayHandler, sortOrder, column }) => {
                 </tr>
               </thead>
               <tbody>
-                {data.map((item, index) => {
+                {sortedArray.map((item, index) => {
                   let id = item._id;
                   return (
                     <tr className="border-b" key={index}>
