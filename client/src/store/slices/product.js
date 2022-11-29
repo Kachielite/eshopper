@@ -76,24 +76,24 @@ const productSlice = createSlice({
     },
     // ------------ Filter Handler --------------------- //
     filterHandler: (state, action) => {
-      if (action.type === "category") {
-        state.filter = { ...state.filter, category: action.item };
-      } else if (action.type === "quantity") {
-        state.filter = { ...state.filter, quantity: action.item };
+      if (action.payload.type === "category") {
+        state.filter = { ...state.filter, category: action.payload.item };
+      } else if (action.payload.type === "quantity") {
+        state.filter = { ...state.filter, quantity: action.payload.item };
       } else {
-        state.filter = { ...state.filter, status: action.item };
+        state.filter = { ...state.filter, status: action.payload.item };
       }
       state.page = 1;
     },
     // ----------- Sort Products Handler ------------------------------//
     sortProductsHandler: (state, action) => {
-      state.sortOrder = "desc";
-      state.column = action.property;
+      state.column = action.payload.property;
 
-      if (action.property === "date" || action.property === "price") {
+      if (action.payload.property === "date" || action.payload.property === "price") {
         if (state.sortOrder === "desc") {
+          state.sortOrder = "asc"
           let array = [...state.sortedArray].sort((a, b) => {
-            if (action.property === "date") {
+            if (action.payload.property === "date") {
               a = new Date(a.createdAt);
               b = new Date(b.createdAt);
             } else {
@@ -106,7 +106,7 @@ const productSlice = createSlice({
         } else {
           state.sortOrder = "desc";
           let array = [...state.sortedArray].sort((a, b) => {
-            if (action.property === "date") {
+            if (action.payload.property === "date") {
               a = new Date(a.createdAt);
               b = new Date(b.createdAt);
             } else {
@@ -119,21 +119,22 @@ const productSlice = createSlice({
         }
       } else {
         if (state.sortOrder === "desc") {
+          state.sortOrder = "asc"
           let array = [...state.sortedArray].sort((a, b) =>
-            a[action.property] > b[action.property]
+            a[action.payload.property] > b[action.payload.property]
               ? 1
-              : b[action.property] > a[action.property]
+              : b[action.payload.property] > a[action.payload.property]
               ? -1
               : 0
           );
           state.sortedArray = array;
         } else {
-          state.state.sortOrder = "desc";
+          state.sortOrder = "desc";
           let array = [...state.sortedArray]
             .sort((a, b) =>
-              a[action.property] > b[action.property]
+              a[action.payload.property] > b[action.payload.property]
                 ? 1
-                : b[action.property] > a[action.property]
+                : b[action.payload.property] > a[action.payload.property]
                 ? -1
                 : 0
             )
@@ -215,7 +216,6 @@ const productSlice = createSlice({
     },
     [fetchAllCategories.fulfilled]: (state, { payload }) => {
       state.categoriesList = payload.category;
-      state.isLoading = false;
     },
     [fetchAllCategories.rejected]: (state, { payload }) => {
       state.isLoading = false;
