@@ -1,5 +1,38 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+
+export const fetchAllProducts = createAsyncThunk(
+  "product/fetchAllProducts",
+  async ({filters, pageNumber}) => {
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_ENDPOINT}/v1/products?quantity=${filters.quantity}&page=${pageNumber}&category=${filters.category}&status=${filters.status}`,
+        { headers: { "content-type": "application/x-www-form-urlencoded" } }
+      );
+        
+
+      return res.data;
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+);
+
+export const fetchAllCategories = createAsyncThunk(
+  "product/fetchAllCategories",
+  async () => {
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_ENDPOINT}/v1/products/categories`
+      );
+      return res.data;
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+);
 
 const productSlice = createSlice({
   name: "product",
@@ -17,30 +50,20 @@ const productSlice = createSlice({
     column: "",
     checkedProduct: [],
     checked: false,
+    error: "",
   },
   reducers: {
     //--------- Fetch All Products Handler----------------------------//
-    fetchAllProductsHandler: (state, actions) => {
-      axios
-        .get(
-          `${process.env.REACT_APP_ENDPOINT}/v1/products?quantity=${state.filter.quantity}&page=${state.page}&category=${state.filter.category}&status=${state.filter.status}`,
-          { headers: { "content-type": "application/x-www-form-urlencoded" } }
-        )
-        .then((res) => {
-          state.sortedArray = res.data.products;
-          state.totalItems = res.data.totalNumberOfProducts;
-          state.lastPage = res.data.lastPage;
-          state.nextPage = res.data.nextPage;
-          state.lastPage = res.data.previousPage;
-          state.isLoading = false;
-        })
-        .catch((error) => {
-          state.isLoading = false;
-          console.log(error);
-        });
+    productsHandler: (state, action) => {
+      state.sortedArray = action.products;
+      state.totalItems = action.totalNumberOfProducts;
+      state.lastPage = action.lastPage;
+      state.nextPage = action.nextPage;
+      state.lastPage = action.previousPage;
+      state.isLoading = false;
     },
     // ------------ Fetch All Categories --------------------- //
-    fetchAllCategoriesHandler: (state, actions) => {
+    fetchAllCategoriesHandler: (state, action) => {
       axios
         .get(`${process.env.REACT_APP_ENDPOINT}/v1/products/categories`)
         .then((res) => {
@@ -52,25 +75,25 @@ const productSlice = createSlice({
         });
     },
     // ------------ Filter Handler --------------------- //
-    filterHandler: (state, actions) => {
-      if (actions.type === "category") {
-        state.filter = { ...state.filter, category: actions.item };
-      } else if (actions.type === "quantity") {
-        state.filter = { ...state.filter, quantity: actions.item };
+    filterHandler: (state, action) => {
+      if (action.type === "category") {
+        state.filter = { ...state.filter, category: action.item };
+      } else if (action.type === "quantity") {
+        state.filter = { ...state.filter, quantity: action.item };
       } else {
-        state.filter = { ...state.filter, status: actions.item };
+        state.filter = { ...state.filter, status: action.item };
       }
       state.page = 1;
     },
     // ----------- Sort Products Handler ------------------------------//
-    sortProductsHandler: (state, actions) => {
+    sortProductsHandler: (state, action) => {
       state.sortOrder = "desc";
-      state.column = actions.property;
+      state.column = action.property;
 
-      if (actions.property === "date" || actions.property === "price") {
+      if (action.property === "date" || action.property === "price") {
         if (state.sortOrder === "desc") {
           let array = [...state.sortedArray].sort((a, b) => {
-            if (actions.property === "date") {
+            if (action.property === "date") {
               a = new Date(a.createdAt);
               b = new Date(b.createdAt);
             } else {
@@ -83,7 +106,7 @@ const productSlice = createSlice({
         } else {
           state.sortOrder = "desc";
           let array = [...state.sortedArray].sort((a, b) => {
-            if (actions.property === "date") {
+            if (action.property === "date") {
               a = new Date(a.createdAt);
               b = new Date(b.createdAt);
             } else {
@@ -97,9 +120,9 @@ const productSlice = createSlice({
       } else {
         if (state.sortOrder === "desc") {
           let array = [...state.sortedArray].sort((a, b) =>
-            a[actions.property] > b[actions.property]
+            a[action.property] > b[action.property]
               ? 1
-              : b[actions.property] > a[actions.property]
+              : b[action.property] > a[action.property]
               ? -1
               : 0
           );
@@ -108,9 +131,9 @@ const productSlice = createSlice({
           state.state.sortOrder = "desc";
           let array = [...state.sortedArray]
             .sort((a, b) =>
-              a[actions.property] > b[actions.property]
+              a[action.property] > b[action.property]
                 ? 1
-                : b[actions.property] > a[actions.property]
+                : b[action.property] > a[action.property]
                 ? -1
                 : 0
             )
@@ -120,8 +143,9 @@ const productSlice = createSlice({
       }
     },
     // ------------ Set Page Number Handler ---------------------//
-    setPageHandler: (state, actions) => {
-      state.page = actions.pageNumber;
+    setPageHandler: (state, action) => {
+      console.log(action)
+      state.page = action.payload;
     },
     // --------------- Checking items Handler ------------------------ //
     checkAllProductsHandler: (state, action) => {
@@ -171,12 +195,36 @@ const productSlice = createSlice({
       }
     },
   },
+  extraReducers: {
+    [fetchAllProducts.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [fetchAllProducts.fulfilled]: (state, { payload}) => {
+      state.sortedArray = payload.products;
+      state.totalItems = payload.totalNumberOfProducts;
+      state.lastPage = payload.lastPage;
+      state.nextPage = payload.nextPage;
+      state.previousPage = payload.previousPage;
+      state.isLoading = false;
+    },
+    [fetchAllProducts.rejected]: (state) => {
+      state.isLoading = false;
+    },
+    [fetchAllCategories.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [fetchAllCategories.fulfilled]: (state, { payload }) => {
+      state.categoriesList = payload.category;
+      state.isLoading = false;
+    },
+    [fetchAllCategories.rejected]: (state, { payload }) => {
+      state.isLoading = false;
+    },
+  },
 });
 
 // Action creators are generated for each case reducer function
 export const {
-  fetchAllProductsHandler,
-  fetchAllCategoriesHandler,
   filterHandler,
   setPageHandler,
   sortProductsHandler,
