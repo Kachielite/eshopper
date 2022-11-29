@@ -9,8 +9,6 @@ export const fetchAllProducts = createAsyncThunk(
         `${process.env.REACT_APP_ENDPOINT}/v1/products?quantity=${filters.quantity}&page=${pageNumber}&category=${filters.category}&status=${filters.status}`,
         { headers: { "content-type": "application/x-www-form-urlencoded" } }
       );
-        
-
       return res.data;
     } catch (error) {
       console.log(error)

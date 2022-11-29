@@ -1,7 +1,11 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { setPageHandler, fetchAllCategories, fetchAllProducts} from "../../store/slices/product";
+import {
+  setPageHandler,
+  fetchAllCategories,
+  fetchAllProducts,
+} from "../../store/slices/product";
 import Dashboard from "../Dashboard";
 import DropDown from "../../components/DropDown";
 import Table from "../../components/Table";
@@ -14,17 +18,25 @@ import { TailSpin } from "react-loader-spinner";
 import SearchBar from "../../components/searchBar";
 
 const ProductTab = () => {
-
-  const dispatch = useDispatch()
-  const productData = useSelector(state => state.product)
-  const {checkedProduct, sortedArray, filter, categoriesList, isLoading, page, totalItems, nextPage, previousPage, lastPage} = productData; 
-
+  const dispatch = useDispatch();
+  const productData = useSelector((state) => state.product);
+  const {
+    checkedProduct,
+    sortedArray,
+    filter,
+    categoriesList,
+    isLoading,
+    page,
+    totalItems,
+    nextPage,
+    previousPage,
+    lastPage,
+  } = productData;
 
   useEffect(() => {
     dispatch(fetchAllCategories());
-    dispatch(fetchAllProducts({filters: filter, pageNumber: page}))
+    dispatch(fetchAllProducts({ filters: filter, pageNumber: page }));
   }, [dispatch, page, filter]);
-
 
   return (
     <Dashboard>
@@ -127,10 +139,8 @@ const ProductTab = () => {
           />
         ) : (
           <div>
-            <div className="mt-7 min-h-[38rem] w-full">
-              <Table
-              data={sortedArray}
-              />
+            <div className=" mt-7 min-h-[38rem] w-full">
+              <Table data={sortedArray} />
             </div>
             {/* Pagination Container */}
             <div className="mt-7 h-full w-full flex flex-row justify-between items-center">

@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { Transition } from "@headlessui/react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   checkAllProductsHandler,
@@ -5,14 +7,29 @@ import {
   sortProductsHandler,
 } from "../store/slices/product";
 import arrowDownIcon from "../assets/icons/ArrowDown.svg";
+import deleteIcon from "../assets/icons/Delete.svg";
+import editIcon from "../assets/icons/Task.svg";
+import viewIcon from "../assets/icons/Pages.svg";
 
-const Table = ({data}) => {
+const Table = ({ data }) => {
+  const [showOption, setShowOption] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState();
+
+  const showOptionHandler = (index) => {
+    setSelectedProduct(index);
+    if (showOption) {
+      setShowOption(false);
+    } else {
+      setShowOption(true);
+    }
+  };
+
   const dispatch = useDispatch();
   const productData = useSelector((state) => state.product);
   const { checked, checkedProduct, column, sortOrder } = productData;
 
   return (
-    <div className="flex flex-col bg-bg2 rounded-md overflow-x-hidden">
+    <div className="flex flex-col bg-bg2 rounded-md overflow-x-hidden ">
       <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
           <div className="overflow-hidden">
@@ -195,8 +212,38 @@ const Table = ({data}) => {
                           {item.status}
                         </div>
                       </td>
-                      <td className="text-sm text-text2 font-normal px-6 py-4 whitespace-nowrap">
+                      <td
+                        className="relative text-sm text-text2 font-normal px-6 py-4 whitespace-nowrap cursor-pointer"
+                        onClick={() => showOptionHandler(index)}>
                         ...
+                        <Transition
+                          className={`absolute right-1 top-7 drop-shadow-2xl z-10 w-28 `}
+                          show={selectedProduct === index && showOption? true : false}
+                          enter="transition ease-out duration-200"
+                          enterFrom="opacity-0 translate-y-0"
+                          enterTo="opacity-100 translate-y-1"
+                          leave="transition ease-in duration-200"
+                          leaveFrom="opacity-100 translate-y-1"
+                          leaveTo="opacity-0 translate-y-0"
+                          onMouseLeave={() => setShowOption(false)}>
+                          <div class="w-full overflow-hidden flex flex-col items-end pr-12">
+                            <div class=" h-3 w-3 bg-bg2 rotate-45 transform origin-bottom-left border"></div>
+                          </div>
+                          <div className="flex flex-col bg-bg2 text-text1 rounded-md">
+                            <div className="flex flex-row items-center justify-start px-5 py-2 space-x-2.5 cursor-pointer space-y-1 hover:bg-bg3 ">
+                              <img src={viewIcon} alt="view" />
+                              <p>View</p>
+                            </div>
+                            <div className="flex flex-row items-center justify-start px-5 py-2 space-x-2.5 cursor-pointer space-y-1 hover:bg-bg3">
+                              <img src={editIcon} alt="edit" />
+                              <p>Edit</p>
+                            </div>
+                            <div className="flex flex-row items-center justify-start px-5 py-2 space-x-2.5 cursor-pointer space-y-1 hover:bg-bg3">
+                              <img src={deleteIcon} alt="delete" />
+                              <p>Delete</p>
+                            </div>
+                          </div>
+                        </Transition>
                       </td>
                     </tr>
                   );
