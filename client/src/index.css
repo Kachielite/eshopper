@@ -11,12 +11,12 @@ html body {
 
 
 .input-cls {
-  @apply text-text1 text-xs outline-none bg-white
+  @apply text-text1 text-xs outline-none bg-bg3
 
 }
 
 .tag-cls {
-  @apply text-text1 text-xs p-10 
+  @apply text-text1 text-xs p-10 bg-white border-[1px] border-blue1
 }
 
 
@@ -48,6 +48,14 @@ html body {
 .ReactTags__tags {
   @apply text-text1 bg-bg3
 }
+
+input[type="file"] {
+  color: transparent;
+}
+::-webkit-file-upload-button {
+  display: none;
+}
+
 
 
 
