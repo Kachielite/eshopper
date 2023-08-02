@@ -37,7 +37,7 @@ export const fetchAllCategories = createAsyncThunk(
 // --------------- Add Product Handler ------------------------ //
 export const addProduct = createAsyncThunk(
     "product/add_product",
-    async ({productDetails}, { rejectWithValue }) => {
+    async ({productDetails, setOpen}, { rejectWithValue }) => {
       try {
         const res = await axios.post(
             `${process.env.REACT_APP_ENDPOINT}/v1/add_product`,
@@ -47,6 +47,7 @@ export const addProduct = createAsyncThunk(
                 }
             }
         );
+        setOpen(true)
         return Promise.resolve(res)
       } catch (error) {
         return rejectWithValue(error?.response)
@@ -257,12 +258,10 @@ const productSlice = createSlice({
       state.isLoading = true;
     },
     [addProduct.fulfilled]: (state, {meta}) => {
-      toast.success('Product successfully added')
-      window.location='/products';
       state.isLoading = false;
     },
     [addProduct.rejected]: (state, {payload}) => {
-       toast.error(`${payload?.data?.message}:${payload?.data?.errors.map(e => e.msg)?.join(",")}` || 'Product upload failed. Try again or contact Administrator')
+       toast.error(`${payload?.data?.message}:${payload?.data?.errors?.map(e => e.msg)?.join(",")}` || 'Product upload failed. Try again or contact Administrator')
       state.isLoading = false;
     },
 

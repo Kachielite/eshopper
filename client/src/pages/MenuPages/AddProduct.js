@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useRef, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import Dashboard from "../Dashboard";
 import homeIcon from "../../assets/icons/Home.svg";
@@ -8,41 +8,40 @@ import imageSM from "../../assets/icons/ImageSM.svg";
 import {useDispatch, useSelector} from "react-redux";
 import {addProduct} from "../../store/slices/product";
 import toast from "react-hot-toast";
+import SuccessModal from "../../components/success-modal";
 
 
 const AddProduct = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const isLoading = useSelector(state => state.product.isLoading)
-    const [photos, setPhotos] = useState({
-        first: undefined,
-        second: undefined,
-        third: undefined,
-        forth: undefined
-    })
-    const [tags, setTags] = useState(['Notebook']);
-    const [productDetails, setProductDetails] = useState({
-        product_name: "",
-        product_description: "",
-        category: "",
-        price: 0,
-        discount: 0,
-        status: "Available",
-    })
+    const [photos, setPhotos] = useState({})
+    const [tags, setTags] = useState([]);
+    const [productDetails, setProductDetails] = useState({status: "Available"})
+    const [open, setOpen] = useState(false)
+    const cancelButtonRef = useRef(null)
 
+    const addNewProductHandler = () => {
+        setOpen(false)
+        window.location.reload();
+    }
 
-    const addProductHandler = async (event) => {
+    const addProductHandler = (event) => {
         event.preventDefault()
         let Files =  Object.entries(photos).map(photo => photo[1])
         let tagsList = tags
-        dispatch(addProduct({productDetails: {...productDetails, Files: Files, tags: tagsList}, navigate }))
+        dispatch(addProduct({productDetails: {...productDetails, Files: Files, tags: tagsList}, setOpen })).then(() => {
+            setTags([])
+            setProductDetails({status: "Available"})
+            setPhotos({})
+        })
     }
-
 
 
     return (
         <Dashboard>
             <div className="flex flex-col px-4 md:px-7 py-8 mb-32 md:mb-24 h-full w-full">
+                <SuccessModal open={open} setOpen={setOpen} cancelButtonRef={cancelButtonRef} navigate={navigate} addNewProductHandler={addNewProductHandler}/>
                 <h1 className="text-text1 text-2xl md:text-3xl font-bold">
                     Add Product
                 </h1>
@@ -69,35 +68,35 @@ const AddProduct = () => {
                         <div
                             className="flex flex-row md:flex-col mb-8 md:mb-0 justify-between space-x-2  items-center h-full w-full mt-4">
                             <div className="relative md:h-64 md:w-64 h-32 w-32">
-                                <input type="file" className="md:h-64 md:w-64 h-32 w-32 absolute z-40"
+                                <input type="file" className="md:h-64 md:w-64 h-32 w-32 absolute z-20"
                                        accept="image/*" name="product1"
                                        onChange={(event) => setPhotos({...photos, first: event.target.files[0]})}/>
                                 <img src={photos.first ? URL.createObjectURL(photos.first) : imageSM} alt=""
-                                     className="md:h-64 md:w-64 h-32 w-32 absolute z-20 object-contain"/>
+                                     className="md:h-64 md:w-64 h-32 w-32 absolute z-10 object-contain"/>
                             </div>
                             <div className="relative md:h-64 md:w-64 h-32 w-32">
-                                <input type="file" className="md:h-64 md:w-64 h-32 w-32 absolute z-40"
+                                <input type="file" className="md:h-64 md:w-64 h-32 w-32 absolute z-20"
                                        accept="image/*" name="product2"
                                        onChange={(event) => setPhotos({...photos, second: event.target.files[0]})}/>
                                 <img src={photos.second ? URL.createObjectURL(photos.second) : imageSM} alt=""
-                                     className="md:h-64 md:w-64 h-32 w-32 absolute z-20 object-contain"/>
+                                     className="md:h-64 md:w-64 h-32 w-32 absolute z-10 object-contain"/>
                             </div>
                         </div>
                         <div
                             className="flex flex-row md:flex-col mb-8 md:mb-0 justify-between space-x-2  items-center h-full w-full mt-4">
                             <div className="relative md:h-64 md:w-64 h-32 w-32">
-                                <input type="file" className="md:h-64 md:w-64 h-32 w-32 absolute z-40"
+                                <input type="file" className="md:h-64 md:w-64 h-32 w-32 absolute z-20"
                                        accept="image/*" name="product3"
                                        onChange={(event) => setPhotos({...photos, third: event.target.files[0]})}/>
                                 <img src={photos.third ? URL.createObjectURL(photos.third) : imageSM} alt=""
-                                     className="md:h-64 md:w-64 h-32 w-32 absolute z-20 object-contain"/>
+                                     className="md:h-64 md:w-64 h-32 w-32 absolute z-10 object-contain"/>
                             </div>
                             <div className="relative md:h-64 md:w-64 h-32 w-32">
-                                <input type="file" className="md:h-64 md:w-64 h-32 w-32 absolute z-40"
+                                <input type="file" className="md:h-64 md:w-64 h-32 w-32 absolute z-20"
                                        accept="image/*" name="product4"
                                        onChange={(event) => setPhotos({...photos, forth: event.target.files[0]})}/>
                                 <img src={photos.forth ? URL.createObjectURL(photos.forth) : imageSM} alt=""
-                                     className="md:h-64 md:w-64 h-32 w-32 absolute z-20 object-contain"/>
+                                     className="md:h-64 md:w-64 h-32 w-32 absolute z-10 object-contain"/>
                             </div>
                         </div>
                     </div>
