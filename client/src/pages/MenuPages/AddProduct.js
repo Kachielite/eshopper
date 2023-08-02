@@ -1,13 +1,19 @@
 import {useState} from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import Dashboard from "../Dashboard";
 import homeIcon from "../../assets/icons/Home.svg";
 import Tags from "../../components/tags/Tags";
 import chevronLeftIcon from "../../assets/icons/chevronLeft.svg";
 import imageSM from "../../assets/icons/ImageSM.svg";
+import {useDispatch, useSelector} from "react-redux";
+import {addProduct} from "../../store/slices/product";
+import toast from "react-hot-toast";
 
 
 const AddProduct = () => {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const isLoading = useSelector(state => state.product.isLoading)
     const [photos, setPhotos] = useState({
         first: undefined,
         second: undefined,
@@ -18,13 +24,20 @@ const AddProduct = () => {
     const [productDetails, setProductDetails] = useState({
         product_name: "",
         product_description: "",
-        product_images: [],
         category: "",
         price: 0,
         discount: 0,
-        tags: tags,
-        status: ""
+        status: "Available",
     })
+
+
+    const addProductHandler = async (event) => {
+        event.preventDefault()
+        let Files =  Object.entries(photos).map(photo => photo[1])
+        let tagsList = tags
+        dispatch(addProduct({productDetails: {...productDetails, Files: Files, tags: tagsList}, navigate }))
+    }
+
 
 
     return (
@@ -49,7 +62,7 @@ const AddProduct = () => {
                     </div>
                 </div>
                 {/* Form Container */}
-                <form
+                <form onSubmit={addProductHandler} encType="multipart/form-data"
                     className="w-full h-full rounded-md bg-bg2 md:space-x-28 flex flex-col md:flex-row md:justify-center items-center px-8 md:px-20 py-14 mt-8">
                     <div
                         className="flex flex-col-reverse md:flex-row justify-start items-center w-full md:w-[40rem] md:h-[36rem]">
@@ -57,14 +70,14 @@ const AddProduct = () => {
                             className="flex flex-row md:flex-col mb-8 md:mb-0 justify-between space-x-2  items-center h-full w-full mt-4">
                             <div className="relative md:h-64 md:w-64 h-32 w-32">
                                 <input type="file" className="md:h-64 md:w-64 h-32 w-32 absolute z-40"
-                                       accept="image/*"
+                                       accept="image/*" name="product1"
                                        onChange={(event) => setPhotos({...photos, first: event.target.files[0]})}/>
                                 <img src={photos.first ? URL.createObjectURL(photos.first) : imageSM} alt=""
                                      className="md:h-64 md:w-64 h-32 w-32 absolute z-20 object-contain"/>
                             </div>
                             <div className="relative md:h-64 md:w-64 h-32 w-32">
                                 <input type="file" className="md:h-64 md:w-64 h-32 w-32 absolute z-40"
-                                       accept="image/*"
+                                       accept="image/*" name="product2"
                                        onChange={(event) => setPhotos({...photos, second: event.target.files[0]})}/>
                                 <img src={photos.second ? URL.createObjectURL(photos.second) : imageSM} alt=""
                                      className="md:h-64 md:w-64 h-32 w-32 absolute z-20 object-contain"/>
@@ -74,14 +87,14 @@ const AddProduct = () => {
                             className="flex flex-row md:flex-col mb-8 md:mb-0 justify-between space-x-2  items-center h-full w-full mt-4">
                             <div className="relative md:h-64 md:w-64 h-32 w-32">
                                 <input type="file" className="md:h-64 md:w-64 h-32 w-32 absolute z-40"
-                                       accept="image/*"
+                                       accept="image/*" name="product3"
                                        onChange={(event) => setPhotos({...photos, third: event.target.files[0]})}/>
                                 <img src={photos.third ? URL.createObjectURL(photos.third) : imageSM} alt=""
                                      className="md:h-64 md:w-64 h-32 w-32 absolute z-20 object-contain"/>
                             </div>
                             <div className="relative md:h-64 md:w-64 h-32 w-32">
                                 <input type="file" className="md:h-64 md:w-64 h-32 w-32 absolute z-40"
-                                       accept="image/*"
+                                       accept="image/*" name="product4"
                                        onChange={(event) => setPhotos({...photos, forth: event.target.files[0]})}/>
                                 <img src={photos.forth ? URL.createObjectURL(photos.forth) : imageSM} alt=""
                                      className="md:h-64 md:w-64 h-32 w-32 absolute z-20 object-contain"/>
@@ -138,10 +151,11 @@ const AddProduct = () => {
                                         ...productDetails,
                                         status: event.target.value
                                     })}
+                                    value={productDetails.status}
                                 >
-                                    <option>Available</option>
-                                    <option>Deleted</option>
-                                    <option>Out of stock</option>
+                                    <option value="Available">Available</option>
+                                    <option value="Deleted">Deleted</option>
+                                    <option value="Out of Stock">Out of stock</option>
                                 </select>
                             </div>
                         </div>
@@ -188,8 +202,8 @@ const AddProduct = () => {
                         <div className="flex flex-row justify-end items-center w-full h-full bg-bg2 space-x-6 my-10">
                             <button
                                 type="submit"
-                                className="bg-blue1 py-2.5 px-10 rounded text-white text-base font-medium hover:bg-blue-200 hover:border-blue-200 hover:text-blue1 duration-200">
-                                Create
+                                className={`py-2.5 px-10 rounded text-white text-base font-medium ${isLoading ? "bg-blue-200": "bg-blue1 "} hover:bg-blue-200 hover:border-blue-200 hover:text-blue1 duration-200`}>
+                                {isLoading ? "Adding product..." : "Add Product"}
                             </button>
                             <button
                                 type="submit"

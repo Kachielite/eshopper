@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import toast from "react-hot-toast";
+
 
 export const fetchAllProducts = createAsyncThunk(
   "product/fetchAllProducts",
@@ -31,6 +33,38 @@ export const fetchAllCategories = createAsyncThunk(
 
   }
 );
+
+// --------------- Add Product Handler ------------------------ //
+export const addProduct = createAsyncThunk(
+    "product/add_product",
+    async ({productDetails}, { rejectWithValue }) => {
+      try {
+        const res = await axios.post(
+            `${process.env.REACT_APP_ENDPOINT}/v1/add_product`,
+            productDetails, {
+              headers:{
+                "Content-Type":'multipart/form-data'
+                }
+            }
+        );
+        return Promise.resolve(res)
+      } catch (error) {
+        return rejectWithValue(error?.response)
+      }
+
+    }
+);
+
+// export const uploadProductPhoto = createAsyncThunk(
+//     "product/upload-product-photo",
+//     async({photo}) => {
+//       try {
+//         const res = await axios.post
+//       }
+//     }
+// )
+
+
 
 const productSlice = createSlice({
   name: "product",
@@ -193,6 +227,7 @@ const productSlice = createSlice({
         }
       }
     },
+
   },
   extraReducers: {
     [fetchAllProducts.pending]: (state) => {
@@ -218,6 +253,19 @@ const productSlice = createSlice({
     [fetchAllCategories.rejected]: (state, { payload }) => {
       state.isLoading = false;
     },
+    [addProduct.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [addProduct.fulfilled]: (state, {meta}) => {
+      toast.success('Product successfully added')
+      window.location='/products';
+      state.isLoading = false;
+    },
+    [addProduct.rejected]: (state, {payload}) => {
+       toast.error(`${payload?.data?.message}:${payload?.data?.errors.map(e => e.msg)?.join(",")}` || 'Product upload failed. Try again or contact Administrator')
+      state.isLoading = false;
+    },
+
   },
 });
 
