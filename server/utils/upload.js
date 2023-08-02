@@ -12,7 +12,7 @@ exports.fileStorage = multer.diskStorage({
     cb(null, "./uploads/productPhoto");
   },
   filename: (req, file, cb) => {
-    cb(null, file.originalname);
+    cb(null,  new Date().toString()+file.originalname);
   },
 });
 //3.File filtering

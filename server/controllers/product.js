@@ -16,20 +16,24 @@ cloudinary.config({
 const uploadPhoto = (photoArray) => {
   return new Promise((resolve, reject) => {
     let urlArray = [];
-    photoArray.map((photo) => {
-      cloudinary.uploader
-        .upload(photo.path, { folder: "eshopper-photos" })
-        .then((results) => {
-          urlArray.push({ url: results.url, id: results.public_id });
-          deleteFile(photo.path);
-          if (urlArray.length === photoArray.length) {
-            resolve(urlArray);
-          }
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
+    if(photoArray.length === 0){
+      resolve(urlArray)
+    }else{
+      photoArray.map((photo) => {
+        cloudinary.uploader
+            .upload(photo.path, { folder: "eshopper-photos" })
+            .then((results) => {
+              urlArray.push({ url: results.url, id: results.public_id });
+              deleteFile(photo.path);
+              if (urlArray.length === photoArray.length) {
+                resolve(urlArray);
+              }
+            })
+            .catch((error) => {
+              reject(error);
+            });
+      });
+    }
   });
 };
 
@@ -126,10 +130,11 @@ exports.addProduct = (req, res, next) => {
   const status = req.body.status;
   const photos = req.files;
 
+
   let errors = validationResult(req);
   if (!errors.isEmpty()) {
     let error = new Error("Invalid input data");
-    error.status = 412;
+    error.statusCode = 412;
     error.data = errors.array();
     throw error;
   }
@@ -162,6 +167,15 @@ exports.addProduct = (req, res, next) => {
     });
 };
 
+exports.uploadPhoto = (req, res, next) => {
+
+  console.log(req.files)
+
+  res.status(201).json({
+    message: "Product photo successfully received",
+  })
+}
+
 exports.editProduct = (req, res, next) => {
   const id = req.params.id;
   const productName = req.body.product_name;
@@ -176,8 +190,8 @@ exports.editProduct = (req, res, next) => {
   let errors = validationResult(req);
   if (!errors.isEmpty()) {
     let error = new Error("Invalid input data");
-    error.status = 412;
-    error.data = errors.array();
+    error.statusCode = 412;
+    error.data = errors.array()
     throw error;
   }
 

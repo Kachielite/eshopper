@@ -36,6 +36,12 @@ route.post(
   productController.addProduct
 );
 
+//Upload product photos
+route.post(
+    "/products/add-product-photo",
+     productController.uploadPhoto
+);
+
 //Update Product Details
 route.put(
   "/update_product/:id",

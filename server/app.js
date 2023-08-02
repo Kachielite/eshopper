@@ -12,13 +12,13 @@ const prodRoute = require("./routes/product")
 
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 3001;
 
 //Middleware
 app.use(cors());
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(multer({storage: upload.fileStorage, fileFilter: upload.fileFiltering}).array('product_images',4))
+app.use(multer({storage: upload.fileStorage, fileFilter: upload.fileFiltering}).any())
 
 
 
@@ -33,7 +33,7 @@ app.get("/", (req, res, next) => {
 app.use((error, req, res, next) => {
   console.log(error);
   let message = error.message;
-  let statusCode = error.statusCode;
+  let statusCode = error.statusCode || 500;
   let data = error.data;
   res.status(statusCode).json({ message: message, errors: data });
 });
