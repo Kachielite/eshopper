@@ -1,4 +1,4 @@
-import {useEffect} from "react";
+import {useEffect, useRef, useState} from "react";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import Dashboard from "../../Dashboard";
 import homeIcon from "../../../assets/icons/Home.svg";
@@ -6,8 +6,9 @@ import Tags from "../../../components/tags/Tags";
 import chevronLeftIcon from "../../../assets/icons/chevronLeft.svg";
 import imageSM from "../../../assets/icons/ImageSM.svg";
 import {useDispatch, useSelector} from "react-redux";
-import {fetchProduct} from "../../../store/slices/product";
+import {deleteProduct, fetchProduct} from "../../../store/slices/product";
 import {TailSpin} from "react-loader-spinner";
+import DeleteConfirmation from "../../../components/delete-confirmation";
 
 
 const Product = () => {
@@ -15,10 +16,12 @@ const Product = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const {isLoading, product} = useSelector(state => state.product)
+    const [open, setOpen] = useState(false)
+    const cancelButtonRef = useRef(null)
 
     useEffect(() => {
         dispatch(fetchProduct({id:id }))
-    }, []);
+    }, [id]);
 
     const imageHandler = (index) => {
         if(product?.product_images && typeof product?.product_images[index] === "object"){
@@ -30,9 +33,17 @@ const Product = () => {
         }
     }
 
+    const deleteHandler = () => {
+        dispatch(deleteProduct({id: id})).then(() => {
+            navigate('/products')
+            setOpen(false)
+        })
+    }
+
     return (
         <Dashboard>
             <div className="flex flex-col px-4 md:px-7 py-8 mb-32 md:mb-24 h-full w-full">
+                <DeleteConfirmation open={open} loading={isLoading} productName={product?.product_name} setOpen={setOpen} cancelButtonRef={cancelButtonRef}  deleteHandler={deleteHandler}/>
                 <h1 className="text-text1 text-2xl md:text-3xl font-bold">
                     Product Details
                 </h1>
@@ -71,7 +82,7 @@ const Product = () => {
                             visible={true}
                         />
                         :
-                        <form
+                        <div
                             className="w-full h-full rounded-md bg-bg2 md:space-x-28 flex flex-col md:flex-row md:justify-center items-center px-8 md:px-20 py-14 mt-8">
                             <div
                                 className="flex flex-col-reverse md:flex-row justify-start items-center w-full md:w-[40rem] md:h-[36rem]">
@@ -185,12 +196,12 @@ const Product = () => {
                                         Edit Product
                                     </Link>
                                     <button
-                                        className="bg-red py-2.5 px-10 rounded text-white text-base font-medium hover:bg-opacity-60 hover:text-red  duration-200">
+                                        className="bg-red py-2.5 px-10 rounded text-white text-base font-medium hover:bg-opacity-60 hover:text-red  duration-200" onClick={() => setOpen(true)}>
                                         Delete
                                     </button>
                                 </div>
                             </div>
-                        </form>
+                        </div>
 
                 }
             </div>

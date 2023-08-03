@@ -29,7 +29,20 @@ export const fetchProduct = createAsyncThunk(
         const res = await axios.get(
             `${process.env.REACT_APP_ENDPOINT}/v1/products/product-details/${id}`
         );
-        console.log(res.data)
+        return Promise.resolve(await res?.data);
+      } catch (error) {
+        console.log(error)
+      }
+    }
+);
+
+export const deleteProduct = createAsyncThunk(
+    "product/delete",
+    async ({id}) => {
+      try {
+        const res = await axios.delete(
+            `${process.env.REACT_APP_ENDPOINT}/v1/delete-product/${id}`
+        );
         return Promise.resolve(await res?.data);
       } catch (error) {
         console.log(error)
@@ -292,6 +305,17 @@ const productSlice = createSlice({
       state.isLoading = false;
     },
     [fetchProduct.rejected]: (state, {payload}) => {
+      toast.error(`${payload?.data?.message}` || 'Oops! . Try again or contact Administrator')
+      state.isLoading = false;
+    },
+    [deleteProduct.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [deleteProduct.fulfilled]: (state, {payload}) => {
+      toast.success('Product successfully deleted')
+      state.isLoading = false;
+    },
+    [deleteProduct.rejected]: (state, {payload}) => {
       toast.error(`${payload?.data?.message}` || 'Oops! . Try again or contact Administrator')
       state.isLoading = false;
     },
