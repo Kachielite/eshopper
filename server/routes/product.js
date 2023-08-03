@@ -36,11 +36,6 @@ route.post(
   productController.addProduct
 );
 
-//Upload product photos
-route.post(
-    "/products/add-product-photo",
-     productController.uploadPhoto
-);
 
 //Update Product Details
 route.put(
@@ -74,19 +69,24 @@ route.put(
   productController.editProduct
 );
 
-//Get All Product
-route.get('/products', productController.getAllProducts)
+//Get Product
+route.get('/products/product-details/:id', productController.getProduct)
 
 //Download
 route.get('/products/download', productController.downloadCSV)
 
-//Search
-route.post('/products/search', productController.searchProduct)
-
 //Fetch All Categories
 route.get('/products/categories', productController.getAllCategories)
 
+//Get All Product
+route.get('/products', productController.getAllProducts)
+
+//Search
+route.post('/products/search', productController.searchProduct)
+
 //Delete Product
-route.post('/delete_product/:id', productController.deleteProduct)
+route.delete('/delete-product/:id', productController.deleteProduct)
+
+
 
 module.exports = route;

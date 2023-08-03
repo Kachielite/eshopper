@@ -56,6 +56,23 @@ const deletePhoto = (photoArray) => {
   });
 };
 
+
+exports.getProduct = (req, res, next) => {
+  const id = req.params.id;
+
+  Product.findById(id).then((product) => {
+    if(!product){
+      return res.status(404).json({message: `Product with id:${id} can not be found`})
+    }
+    return res.status(200).json({message: "Product successfully fetched", product: product})
+  }).catch(error => {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    next(error);
+  })
+}
+
 exports.getAllProducts = (req, res, next) => {
   const page = req.query.page;
   const productPerPage = req.query.quantity;
@@ -120,6 +137,7 @@ exports.getAllCategories = (req, res, next) => {
   });
 };
 
+
 exports.addProduct = (req, res, next) => {
   const productName = req.body.product_name;
   const productDescription = req.body.product_description;
@@ -167,14 +185,6 @@ exports.addProduct = (req, res, next) => {
     });
 };
 
-exports.uploadPhoto = (req, res, next) => {
-
-  console.log(req.files)
-
-  res.status(201).json({
-    message: "Product photo successfully received",
-  })
-}
 
 exports.editProduct = (req, res, next) => {
   const id = req.params.id;
@@ -246,15 +256,16 @@ exports.editProduct = (req, res, next) => {
   });
 };
 
+
 exports.deleteProduct = (req, res, next) => {
-  const ids = req.params.ids;
+  const id = req.params.id;
 
   Product.findById(id)
     .then((product) => {
       deletePhoto(product.product_images);
     })
     .then(() => {
-      return Product.deleteMany({_id:{$in:ids}});
+      return Product.deleteMany({_id:{$in:id}});
     })
     .then((results) => {
       res.status(200).json({ message: "Products successfully deleted" });
@@ -266,6 +277,8 @@ exports.deleteProduct = (req, res, next) => {
       next(error);
     });
 };
+
+
 
 exports.downloadCSV = (req, res, next) => {
   const category = req.query.category;
