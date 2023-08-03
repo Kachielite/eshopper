@@ -5,19 +5,19 @@ import {
   setPageHandler,
   fetchAllCategories,
   fetchAllProducts,
-} from "../../store/slices/product";
-import Dashboard from "../Dashboard";
-import DropDown from "../../components/DropDown";
-import Table from "../../components/Table";
-import importIcon from "../../assets/icons/Import.svg";
-import printIcon from "../../assets/icons/Print.svg";
-import arrowLeft from "../../assets/icons/ArrowLeft.svg";
-import arrowRight from "../../assets/icons/ArrowRight.svg";
-import homeIcon from "../../assets/icons/Home.svg";
+} from "../../../store/slices/product";
+import Dashboard from "../../Dashboard";
+import DropDown from "../../../components/DropDown";
+import Table from "../../../components/Table";
+import importIcon from "../../../assets/icons/Import.svg";
+import printIcon from "../../../assets/icons/Print.svg";
+import arrowLeft from "../../../assets/icons/ArrowLeft.svg";
+import arrowRight from "../../../assets/icons/ArrowRight.svg";
+import homeIcon from "../../../assets/icons/Home.svg";
 import { TailSpin } from "react-loader-spinner";
-import SearchBar from "../../components/searchBar";
+import SearchBar from "../../../components/searchBar";
 
-const ProductTab = () => {
+const Index = () => {
   const dispatch = useDispatch();
   const productData = useSelector((state) => state.product);
   const {
@@ -220,4 +220,4 @@ const ProductTab = () => {
   );
 };
 
-export default ProductTab;
+export default Index;

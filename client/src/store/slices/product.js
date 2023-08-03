@@ -3,6 +3,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 
+
+
 export const fetchAllProducts = createAsyncThunk(
   "product/fetchAllProducts",
   async ({filters, pageNumber}) => {
@@ -19,6 +21,23 @@ export const fetchAllProducts = createAsyncThunk(
   }
 );
 
+// --------------- Fetch Product ------------------------ //
+export const fetchProduct = createAsyncThunk(
+    "product/fetch-product",
+    async ({id}) => {
+      try {
+        const res = await axios.get(
+            `${process.env.REACT_APP_ENDPOINT}/v1/products/product-details/${id}`
+        );
+        console.log(res.data)
+        return Promise.resolve(await res?.data);
+      } catch (error) {
+        console.log(error)
+      }
+    }
+);
+
+// --------------- Fetch all Categories ------------------------ //
 export const fetchAllCategories = createAsyncThunk(
   "product/fetchAllCategories",
   async () => {
@@ -71,6 +90,7 @@ const productSlice = createSlice({
   name: "product",
   initialState: {
     isLoading: false,
+    product:{},
     sortedArray: [],
     totalItems: 0,
     page: 1,
@@ -264,7 +284,17 @@ const productSlice = createSlice({
        toast.error(`${payload?.data?.message}:${payload?.data?.errors?.map(e => e.msg)?.join(",")}` || 'Product upload failed. Try again or contact Administrator')
       state.isLoading = false;
     },
-
+    [fetchProduct.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [fetchProduct.fulfilled]: (state, {payload}) => {
+      state.product = payload?.product;
+      state.isLoading = false;
+    },
+    [fetchProduct.rejected]: (state, {payload}) => {
+      toast.error(`${payload?.data?.message}` || 'Oops! . Try again or contact Administrator')
+      state.isLoading = false;
+    },
   },
 });
 

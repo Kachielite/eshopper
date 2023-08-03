@@ -1,14 +1,14 @@
 import {useRef, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
-import Dashboard from "../Dashboard";
-import homeIcon from "../../assets/icons/Home.svg";
-import Tags from "../../components/tags/Tags";
-import chevronLeftIcon from "../../assets/icons/chevronLeft.svg";
-import imageSM from "../../assets/icons/ImageSM.svg";
+import Dashboard from "../../Dashboard";
+import homeIcon from "../../../assets/icons/Home.svg";
+import Tags from "../../../components/tags/Tags";
+import chevronLeftIcon from "../../../assets/icons/chevronLeft.svg";
+import imageSM from "../../../assets/icons/ImageSM.svg";
 import {useDispatch, useSelector} from "react-redux";
-import {addProduct} from "../../store/slices/product";
+import {addProduct} from "../../../store/slices/product";
 import toast from "react-hot-toast";
-import SuccessModal from "../../components/success-modal";
+import SuccessModal from "../../../components/success-modal";
 
 
 const AddProduct = () => {

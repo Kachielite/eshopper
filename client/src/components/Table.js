@@ -10,6 +10,7 @@ import arrowDownIcon from "../assets/icons/ArrowDown.svg";
 import deleteIcon from "../assets/icons/Delete.svg";
 import editIcon from "../assets/icons/Task.svg";
 import viewIcon from "../assets/icons/Pages.svg";
+import {Link} from "react-router-dom";
 
 const Table = ({ data }) => {
   const [showOption, setShowOption] = useState(false);
@@ -176,9 +177,7 @@ const Table = ({ data }) => {
                             )
                           }
                           checked={
-                            checked || checkedProduct.find((e) => e.id === id)
-                              ? true
-                              : false
+                            !!(checked || checkedProduct.find((e) => e.id === id))
                           }
                         />
                       </td>
@@ -226,13 +225,13 @@ const Table = ({ data }) => {
                           leaveFrom="opacity-100 translate-y-1"
                           leaveTo="opacity-0 translate-y-0"
                           onMouseLeave={() => setShowOption(false)}>
-                          <div class="w-full overflow-hidden flex flex-col items-end pr-12">
-                            <div class=" h-3 w-3 bg-bg2 rotate-45 transform origin-bottom-left border"></div>
+                          <div className="w-full overflow-hidden flex flex-col items-end pr-12">
+                            <div className=" h-3 w-3 bg-bg2 rotate-45 transform origin-bottom-left border"></div>
                           </div>
                           <div className="flex flex-col bg-bg2 text-text1 rounded-md">
                             <div className="flex flex-row items-center justify-start px-5 py-2 space-x-2.5 cursor-pointer space-y-1 hover:bg-bg3 ">
                               <img src={viewIcon} alt="view" />
-                              <p>View</p>
+                              <Link to={`/products/${item._id}`}>View</Link>
                             </div>
                             <div className="flex flex-row items-center justify-start px-5 py-2 space-x-2.5 cursor-pointer space-y-1 hover:bg-bg3">
                               <img src={editIcon} alt="edit" />

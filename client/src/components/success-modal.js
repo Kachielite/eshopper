@@ -56,10 +56,10 @@ export default function SuccessModal({open, setOpen, cancelButtonRef, navigate, 
                                     <p className="text-[#44566C] text-[1.25rem] mt-[1.62rem]">Product was added</p>
                                 </div>
                                 <div className="flex flex-row justify-center items-center w-full bg-bg1 ">
-                                    <button className="py-[1.19rem] px-[1.98rem] text-[0.9375rem] text-[#44566C] text-center w-1/2 outline-none" onClick={addNewProductHandler}>
+                                    <button className="py-[1.19rem]  px-4 md:px-[1.98rem] text-[0.9375rem] text-[#44566C] text-center w-1/2 outline-none" onClick={addNewProductHandler}>
                                         Add New Product
                                     </button>
-                                    <button className="py-[1.19rem] px-[1.98rem] text-[0.9375rem] text-[#44566C] text-center w-1/2 outline-none" onClick={closeHandler}>
+                                    <button className="py-[1.19rem] px-4 md:px-[1.98rem] text-[0.9375rem] text-[#44566C] text-center w-1/2 outline-none" onClick={closeHandler}>
                                         Close
                                     </button>
                                 </div>
