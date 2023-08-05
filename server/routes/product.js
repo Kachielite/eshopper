@@ -1,12 +1,13 @@
 const express = require("express");
 const { body } = require("express-validator");
+const {isAuth} = require("../middleware/auth")
 const productController = require("../controllers/product");
 
 const route = express.Router();
 
 //Add Product Details
 route.post(
-  "/add_product",
+  "/products/add_product",
   [
     body("product_name")
       .not()
@@ -39,7 +40,7 @@ route.post(
 
 //Update Product Details
 route.put(
-  "/update_product/:id",
+  "/products/edit-product/:id",
   [
     body("product_name")
       .not()
@@ -70,22 +71,22 @@ route.put(
 );
 
 //Get Product
-route.get('/products/product-details/:id', productController.getProduct)
+route.get('/products/product-details/:id', isAuth, productController.getProduct)
 
 //Download
-route.get('/products/download', productController.downloadCSV)
+route.get('/products/download', isAuth, productController.downloadCSV)
 
 //Fetch All Categories
-route.get('/products/categories', productController.getAllCategories)
+route.get('/products/categories', isAuth, productController.getAllCategories)
 
 //Get All Product
-route.get('/products', productController.getAllProducts)
+route.get('/products', isAuth, productController.getAllProducts)
 
 //Search
-route.post('/products/search', productController.searchProduct)
+route.post('/products/search', isAuth, productController.searchProduct)
 
 //Delete Product
-route.delete('/delete-product/:id', productController.deleteProduct)
+route.delete('/products/delete-product/:id', isAuth, productController.deleteProduct)
 
 
 

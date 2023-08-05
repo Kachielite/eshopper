@@ -237,7 +237,8 @@ exports.editProduct = (req, res, next) => {
           }
           next(error);
         });
-    } else {
+    }
+
       product
         .save()
         .then((results) => {
@@ -252,7 +253,6 @@ exports.editProduct = (req, res, next) => {
           }
           next(error);
         });
-    }
   });
 };
 
