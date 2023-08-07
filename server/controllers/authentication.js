@@ -4,7 +4,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
-const cors = require("cors");
 const User = require("../models/Users");
 
 let transport = nodemailer.createTransport({
@@ -86,10 +85,9 @@ exports.login = (req, res, next) => {
       });
     })
     .then((token) => {
+      res.cookie('authToken', token, { httpOnly: true, path: '/'  });
       res.status(200).json({
         message: "User authenticated successfully",
-        token: token,
-        userId: user._id.toString(),
       });
     })
     .catch((error) => {

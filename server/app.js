@@ -9,18 +9,21 @@ const upload = require("./utils/upload")
 
 const authRoute = require("./routes/authentication");
 const prodRoute = require("./routes/product")
+const cookieParser = require("cookie-parser");
 
 
 const app = express();
 const port = process.env.PORT || 3001;
 
 //Middleware
-app.use(cors());
+app.use(cookieParser());
+app.use(cors({
+  origin: 'http://localhost:3000', // Replace with your frontend's URL
+  credentials: true
+}));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(multer({storage: upload.fileStorage, fileFilter: upload.fileFiltering}).any())
-
-
 
 //routes
 app.use("/v1", authRoute);

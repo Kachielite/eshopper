@@ -2,8 +2,7 @@ const jwt = require('jsonwebtoken');
 const User = require("../models/Users");
 
 exports.isAuth = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+    const token = req.cookies.authToken;
     let decodedToken = {};
 
     if (!token) {
@@ -38,3 +37,5 @@ exports.isAuth = (req, res, next) => {
             next(error);
         });
 };
+
+

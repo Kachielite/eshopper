@@ -4,6 +4,7 @@ const { body } = require("express-validator");
 const User = require("../models/Users");
 const authControllers = require("../controllers/authentication");
 
+
 const route = express.Router();
 
 //Registration
