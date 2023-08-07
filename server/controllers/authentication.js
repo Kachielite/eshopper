@@ -98,6 +98,14 @@ exports.login = (req, res, next) => {
     });
 };
 
+exports.logout = (req, res, next) => {
+  return res
+      .clearCookie("access_token")
+      .status(200)
+      .json({ message: "Successfully logged out" });
+}
+
+
 exports.forgetPassword = (req, res, next) => {
   let email = req.body.email;
   let token;

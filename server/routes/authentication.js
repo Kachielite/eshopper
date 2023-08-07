@@ -48,6 +48,9 @@ route.post(
 //Login
 route.put("/login", authControllers.login);
 
+//Logout
+route.put("/logout", authControllers.logout);
+
 //Forget Password
 route.put("/forget_password", authControllers.forgetPassword);
 
