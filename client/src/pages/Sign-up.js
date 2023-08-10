@@ -2,50 +2,32 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
+import axiosInstance from "../services";
 import { Transition } from "@headlessui/react";
 import { LineWave } from "react-loader-spinner";
 import coverImage from "../assets/images/shopping.jpeg";
 import userIcon from "../assets/icons/User.svg";
 import emailIcon from "../assets/icons/Email.svg";
 import passwordIcon from "../assets/icons/Password.svg";
+import {useDispatch, useSelector} from "react-redux";
+import {signup} from "../store/slices/auth";
+import toast from "react-hot-toast";
 
 const SignUp = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [showError, setShowError] = useState(false);
-
+  const dispatch = useDispatch()
   const navigate = useNavigate();
-  const handleSubmit = ({ name, email, password, acceptTOS }) => {
-    setLoading(true);
-    axios
-      .post(`${process.env.REACT_APP_ENDPOINT}/v1/register`, {
-        name: name,
-        email: email,
-        password: password,
-      })
-      .then((results) => {
-        console.log(results);
-        setLoading(false);
-        navigate("/");
-      })
-      .catch((error) => {
-        setLoading(false);
-        setShowError(true);
-        setError(
-          error.response.data.message
-            ? error.response.data.message
-            : error.message
-        );
-        console.log(error);
-      });
+  const isLoading = useSelector(state => state.auth.isLoading)
+  const handleSubmit = ({ name, email, password }) => {
+      dispatch(signup({name: name, email: email, password: password}))
+          .unwrap()
+          .then(() => {
+            navigate('/')
+            toast.success('Registration successful. Please login with your newly created credentials')
+          }).catch(error => {
+            Promise.reject(error)
+          })
   };
 
-  useEffect(() => {
-    setTimeout(() => {
-      setShowError(false);
-    }, [6000]);
-  }, [showError]);
 
   const validationSchema = Yup.object({
     name: Yup.string()
@@ -72,20 +54,6 @@ const SignUp = () => {
   return (
     // Global Container
     <div className="bg-bg3 min-h-screen  flex flex-row justify-center items-center text-left relative">
-      <Transition
-        className={`absolute top-14 md:top-36`}
-        show={showError}
-        enter="transition ease-out duration-700"
-        enterFrom="opacity-0 translate-y-1"
-        enterTo="opacity-100 translate-y-0"
-        leave="transition ease-in duration-700"
-        leaveFrom="opacity-100 translate-y-0"
-        leaveTo="opacity-0 translate-y-1">
-        <p className=" text-white text-sm  bg-red opacity-90  px-3 py-2 text-center w-[20rem] mb-8 rounded">
-          {error}
-        </p>
-      </Transition>
-      {/* Sign up Model Container */}
       <div className="flex flex-row shadow-2xl justify-center  md:p-0 rounded-xl overflow-hidden mx-6 md:max-w-4xl  md:w-[53rem] md:h-[35rem] md:mx-0">
         {/* Image Container */}
         <div className="hidden md:block md:w-[50%]">
@@ -148,7 +116,7 @@ const SignUp = () => {
                       className={`flex flex-row justify-start items-center p-2 bg-bg3 ${
                         touched.email && errors.email ? "border border-red" : ""
                       }`}>
-                      <img src={emailIcon} alt="" srcset="" className="mr-3" />
+                      <img src={emailIcon} alt="email Icon"  className="mr-3" />
                       <input
                         type="text"
                         name="email"
@@ -243,7 +211,7 @@ const SignUp = () => {
                     {touched.acceptTOS && errors.acceptTOS}
                   </p>
                 </div>
-                {loading ? (
+                {isLoading ? (
                   <div className="flex justify-center items-center">
                     <LineWave
                       height="100"
@@ -262,13 +230,11 @@ const SignUp = () => {
                   <button
                     type="submit"
                     disabled={
-                      errors.name ||
-                      errors.email ||
-                      errors.password ||
-                      errors.confirmPassword ||
-                      errors.acceptTOS
-                        ? true
-                        : false
+                      !!(errors.name ||
+                          errors.email ||
+                          errors.password ||
+                          errors.confirmPassword ||
+                          errors.acceptTOS)
                     }
                     className={
                       errors.name ||

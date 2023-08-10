@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import axiosInstance from "../../services";
 import toast from "react-hot-toast";
 
 
@@ -7,15 +7,16 @@ import toast from "react-hot-toast";
 
 export const fetchAllProducts = createAsyncThunk(
   "product/fetchAllProducts",
-  async ({filters, pageNumber}) => {
+  async ({filters, pageNumber}, { rejectWithValue }) => {
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_ENDPOINT}/v1/products?quantity=${filters.quantity}&page=${pageNumber}&category=${filters.category}&status=${filters.status}`,
+      const res = await axiosInstance.get(
+        `/products?quantity=${filters.quantity}&page=${pageNumber}&category=${filters.category}&status=${filters.status}`,
         { headers: { "content-type": "application/x-www-form-urlencoded" } }
       );
       return res.data;
     } catch (error) {
       console.log(error)
+      return rejectWithValue(error?.response)
     }
 
   }
@@ -24,43 +25,46 @@ export const fetchAllProducts = createAsyncThunk(
 // --------------- Fetch Product ------------------------ //
 export const fetchProduct = createAsyncThunk(
     "product/fetch-product",
-    async ({id}) => {
+    async ({id}, { rejectWithValue }) => {
       try {
-        const res = await axios.get(
-            `${process.env.REACT_APP_ENDPOINT}/v1/products/product-details/${id}`
+        const res = await axiosInstance.get(
+            `/products/product-details/${id}`
         );
         return Promise.resolve(await res?.data);
       } catch (error) {
         console.log(error)
+        return rejectWithValue(error?.response)
       }
     }
 );
 
 export const editProduct = createAsyncThunk(
     "product/edit",
-    async ({id, productDetails}) => {
+    async ({id, productDetails}, { rejectWithValue }) => {
       try {
-        const res = await axios.put(
-            `${process.env.REACT_APP_ENDPOINT}/v1/products/edit-product/${id}`,
+        const res = await axiosInstance.put(
+            `/products/edit-product/${id}`,
             productDetails
         );
         return Promise.resolve(await res?.data);
       } catch (error) {
         console.log(error)
+        return rejectWithValue(error?.response)
       }
     }
 );
 
 export const deleteProduct = createAsyncThunk(
     "product/delete",
-    async ({id}) => {
+    async ({id}, { rejectWithValue }) => {
       try {
-        const res = await axios.delete(
-            `${process.env.REACT_APP_ENDPOINT}/v1/products/delete-product/${id}`
+        const res = await axiosInstance.delete(
+            `/products/delete-product/${id}`
         );
         return Promise.resolve(await res?.data);
       } catch (error) {
         console.log(error)
+        return rejectWithValue(error?.response)
       }
     }
 );
@@ -68,14 +72,15 @@ export const deleteProduct = createAsyncThunk(
 // --------------- Fetch all Categories ------------------------ //
 export const fetchAllCategories = createAsyncThunk(
   "product/fetchAllCategories",
-  async () => {
+  async ({ rejectWithValue }) => {
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_ENDPOINT}/v1/products/categories`
+      const res = await axiosInstance.get(
+        `/products/categories`
       );
       return res.data;
     } catch (error) {
       console.log(error)
+      return rejectWithValue(error?.response)
     }
 
   }
@@ -86,7 +91,7 @@ export const addProduct = createAsyncThunk(
     "product/add_product",
     async ({productDetails, setOpen}, { rejectWithValue }) => {
       try {
-        const res = await axios.post(
+        const res = await axiosInstance.post(
             `${process.env.REACT_APP_ENDPOINT}/v1/add_product`,
             productDetails, {
               headers:{
@@ -103,20 +108,12 @@ export const addProduct = createAsyncThunk(
     }
 );
 
-// export const uploadProductPhoto = createAsyncThunk(
-//     "product/upload-product-photo",
-//     async({photo}) => {
-//       try {
-//         const res = await axios.post
-//       }
-//     }
-// )
-
 
 
 const productSlice = createSlice({
   name: "product",
   initialState: {
+
     isLoading: false,
     product:{},
     sortedArray: [],
@@ -145,7 +142,7 @@ const productSlice = createSlice({
     },
     // ------------ Fetch All Categories --------------------- //
     fetchAllCategoriesHandler: (state, action) => {
-      axios
+      axiosInstance
         .get(`${process.env.REACT_APP_ENDPOINT}/v1/products/categories`)
         .then((res) => {
           state.categoriesList = res.data.category;

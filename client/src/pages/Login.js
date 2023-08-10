@@ -1,49 +1,28 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import {Link, Navigate, useNavigate} from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
-import { Transition } from "@headlessui/react";
 import { LineWave } from "react-loader-spinner";
 import coverImage from "../assets/images/eshopper.jpeg";
 import userIcon from "../assets/icons/User.svg";
 import passwordIcon from "../assets/icons/Password.svg";
+import {useDispatch, useSelector} from "react-redux";
+import {login} from "../store/slices/auth";
+
 
 const Login = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [showError, setShowError] = useState(false);
+  const dispatch = useDispatch()
+  const {isLoading, isAuthenticated} = useSelector(state => state.auth)
 
   const navigate = useNavigate();
   const handleSubmit = (values) => {
-    setLoading(true);
-    axios
-      .put(`${process.env.REACT_APP_ENDPOINT}/v1/login`, {
-        email: values.email,
-        password: values.password,
-      })
-      .then((results) => {
-        console.log(results);
-        setLoading(false);
-        navigate("/dashboard");
-      })
-      .catch((error) => {
-        setLoading(false);
-        setShowError(true);
-        setError(
-          error.response.data.message
-            ? error.response.data.message
-            : error.message
-        );
-        console.log(error);
-      });
+    dispatch(login({email: values.email, password: values.password}))
+        .unwrap()
+        .then(() => {
+          navigate("/dashboard");
+        }).catch(error => {
+          console.log(error)
+        })
   };
-
-  useEffect(() => {
-    setTimeout(() => {
-      setShowError(false);
-    }, [7000]);
-  }, [showError]);
 
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -52,23 +31,14 @@ const Login = () => {
     password: Yup.string().required("Password is required"),
   });
 
+    if (isAuthenticated) {
+        return <Navigate to="/dashboard"/>;
+    }
+
+
   return (
     // Global Container
     <div className="bg-bg3 min-h-screen w-screen flex flex-col justify-center  items-center text-left relative">
-      <Transition
-        className={`absolute top-14 md:top-36`}
-        show={showError}
-        enter="transition ease-out duration-700"
-        enterFrom="opacity-0 translate-y-1"
-        enterTo="opacity-100 translate-y-0"
-        leave="transition ease-in duration-700"
-        leaveFrom="opacity-100 translate-y-0"
-        leaveTo="opacity-0 translate-y-1">
-        <p className=" text-white text-sm  bg-red opacity-90  px-3 py-2 text-center w-[20rem] mb-8 rounded">
-          {error}
-        </p>
-      </Transition>
-      {/* Login Model Container */}
       <div className="flex flex-row shadow-2xl justify-center mt-4  md:p-0 rounded-xl overflow-hidden mx-6 md:max-w-4xl  md:w-[53rem] md:h-[35rem] md:mx-0">
         {/* Image Container */}
         <div className="hidden md:block md:w-[50%]">
@@ -176,7 +146,7 @@ const Login = () => {
                     </Link>
                   </div>
                 </div>
-                {loading ? (
+                {isLoading ? (
                   <div className="flex justify-center items-center">
                     <LineWave
                       height="100"
