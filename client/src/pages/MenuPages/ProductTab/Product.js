@@ -9,6 +9,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {deleteProduct, fetchProduct} from "../../../store/slices/product";
 import {TailSpin} from "react-loader-spinner";
 import DeleteConfirmation from "../../../components/delete-confirmation";
+import toast from "react-hot-toast";
 
 
 const Product = () => {
@@ -21,6 +22,19 @@ const Product = () => {
 
     useEffect(() => {
         dispatch(fetchProduct({id:id }))
+            .unwrap()
+            .then((res) => Promise.resolve(res) )
+            .catch(e => {
+                if(e.status === 401){
+                    localStorage.clear()
+                    navigate('/')
+                    toast.error('Login session expired, kindly login again')
+                } else{
+                    toast.error('Something went wrong. Please contact the administrator for assistance')
+                    return Promise.reject(e)
+                }
+
+            })
     }, [id]);
 
     const imageHandler = (index) => {
@@ -34,10 +48,13 @@ const Product = () => {
     }
 
     const deleteHandler = () => {
-        dispatch(deleteProduct({id: id})).then(() => {
+        dispatch(deleteProduct({id: id}))
+            .unwrap()
+            .then(() => {
             navigate('/products')
+        }).then(() => {
             setOpen(false)
-        })
+        }).catch(error => Promise.reject(error))
     }
 
     return (

@@ -34,7 +34,18 @@ const AddProduct = () => {
             setTags([])
             setProductDetails({status: "Available"})
             setPhotos({})
-        })
+        }).then((res) => Promise.resolve(res))
+            .catch(e => {
+                if(e.status === 401){
+                    localStorage.clear()
+                    navigate('/')
+                    toast.error('Login session expired, kindly login again')
+                } else{
+                    toast.error('Something went wrong. Please contact the administrator for assistance')
+                    return Promise.reject(e)
+                }
+
+            })
     }
 
 
@@ -205,7 +216,7 @@ const AddProduct = () => {
                                 {isLoading ? "Adding product..." : "Add Product"}
                             </button>
                             <button
-                                type="submit"
+                                onClick={() => navigate('/products')}
                                 className="bg-blue-200 py-2.5 px-10 rounded text-blue1 text-base font-medium hover:bg-bg4 hover:text-text1 duration-200">
                                 Cancel
                             </button>

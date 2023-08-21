@@ -72,7 +72,7 @@ export const deleteProduct = createAsyncThunk(
 // --------------- Fetch all Categories ------------------------ //
 export const fetchAllCategories = createAsyncThunk(
   "product/fetchAllCategories",
-  async ({ rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const res = await axiosInstance.get(
         `/products/categories`
@@ -113,7 +113,7 @@ export const addProduct = createAsyncThunk(
 const productSlice = createSlice({
   name: "product",
   initialState: {
-
+    isLoadingAllProductData: false,
     isLoading: false,
     product:{},
     sortedArray: [],
@@ -277,7 +277,7 @@ const productSlice = createSlice({
   },
   extraReducers: {
     [fetchAllProducts.pending]: (state) => {
-      state.isLoading = true;
+      state.isLoadingAllProductData = true;
     },
     [fetchAllProducts.fulfilled]: (state, { payload}) => {
       state.sortedArray = payload.products;
@@ -285,10 +285,10 @@ const productSlice = createSlice({
       state.lastPage = payload.lastPage;
       state.nextPage = payload.nextPage;
       state.previousPage = payload.previousPage;
-      state.isLoading = false;
+      state.isLoadingAllProductData = false;
     },
     [fetchAllProducts.rejected]: (state) => {
-      state.isLoading = false;
+      state.isLoadingAllProductData = false;
     },
     [fetchAllCategories.pending]: (state) => {
       state.isLoading = true;

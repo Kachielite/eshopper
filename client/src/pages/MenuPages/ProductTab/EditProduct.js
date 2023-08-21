@@ -1,12 +1,12 @@
-import {useRef, useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
+import {useEffect, useRef, useState} from "react";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import Dashboard from "../../Dashboard";
 import homeIcon from "../../../assets/icons/Home.svg";
 import Tags from "../../../components/tags/Tags";
 import chevronLeftIcon from "../../../assets/icons/chevronLeft.svg";
 import imageSM from "../../../assets/icons/ImageSM.svg";
 import {useDispatch, useSelector} from "react-redux";
-import {addProduct} from "../../../store/slices/product";
+import {addProduct, fetchProduct} from "../../../store/slices/product";
 import toast from "react-hot-toast";
 import SuccessModal from "../../../components/success-modal";
 
@@ -14,7 +14,8 @@ import SuccessModal from "../../../components/success-modal";
 const EditProduct = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const isLoading = useSelector(state => state.product.isLoading)
+    const {id} = useParams()
+    const {isLoading, product} = useSelector(state => state.product)
     const [photos, setPhotos] = useState({})
     const [tags, setTags] = useState([]);
     const [productDetails, setProductDetails] = useState({status: "Available"})
@@ -38,12 +39,40 @@ const EditProduct = () => {
     }
 
 
+    const imageHandler = (index) => {
+        if(product?.product_images && typeof product?.product_images[index] === "object"){
+            return product?.product_images[index]?.url
+        } else if (product?.product_images && typeof product?.product_images[index] === "string"){
+            return product?.product_images[index]
+        } else {
+            return imageSM
+        }
+    }
+
+    useEffect(() => {
+        dispatch(fetchProduct({id:id }))
+            .unwrap()
+            .then((res) => Promise.resolve(res))
+            .catch(e => {
+                if(e.status === 401){
+                    localStorage.clear()
+                    navigate('/')
+                    toast.error('Login session expired, kindly login again')
+                } else{
+                    toast.error('Something went wrong. Please contact the administrator for assistance')
+                    return Promise.reject(e)
+                }
+
+            })
+    }, [id]);
+
+
     return (
         <Dashboard>
             <div className="flex flex-col px-4 md:px-7 py-8 mb-32 md:mb-24 h-full w-full">
                 <SuccessModal open={open} setOpen={setOpen} cancelButtonRef={cancelButtonRef} navigate={navigate} addNewProductHandler={addNewProductHandler}/>
                 <h1 className="text-text1 text-2xl md:text-3xl font-bold">
-                    Add Product
+                    Edit Product
                 </h1>
                 {/* Print/Export Action Container */}
                 <div className="flex flex-row space-x-6 justify-between items-center mt-2">
@@ -57,7 +86,7 @@ const EditProduct = () => {
                             </p>
                         </Link>
                         <img src={chevronLeftIcon} alt="chevron left"/>
-                        <p className="text-text1 text-sm">Add Product</p>
+                        <p className="text-text1 text-sm">Edit Product</p>
                     </div>
                 </div>
                 {/* Form Container */}
@@ -112,6 +141,7 @@ const EditProduct = () => {
                                     product_name: event.target.value
                                 })}
                                 required
+                                value={product?.product_name}
                             />
                         </div>
                         <div className="w-full flex flex-col space-y-1">
@@ -124,6 +154,7 @@ const EditProduct = () => {
                       ...productDetails,
                       product_description: event.target.value
                   })}
+                      value={product?.product_description}
                       rows="7"></textarea>
                                 </div>
                             </div>
@@ -139,6 +170,7 @@ const EditProduct = () => {
                                         ...productDetails,
                                         category: event.target.value
                                     })}
+                                    value={product?.category}
                                     required
                                 />
                             </div>
@@ -150,7 +182,7 @@ const EditProduct = () => {
                                         ...productDetails,
                                         status: event.target.value
                                     })}
-                                    value={productDetails.status}
+                                    value={product?.status}
                                 >
                                     <option value="Available">Available</option>
                                     <option value="Deleted">Deleted</option>
@@ -171,6 +203,7 @@ const EditProduct = () => {
                                             ...productDetails,
                                             price: parseInt(event.target.value)
                                         })}
+                                        value={product?.price}
                                         required
                                     />
                                 </div>
@@ -187,6 +220,7 @@ const EditProduct = () => {
                                             ...productDetails,
                                             discount: parseInt(event.target.value)
                                         })}
+                                        value={product?.discount}
                                         required
                                     />
                                 </div>
@@ -195,14 +229,14 @@ const EditProduct = () => {
                         <div className="w-full flex flex-col space-y-1">
                             <h3 className="text-text2 font-normal text-sm">Tags</h3>
                             <div className="bg-bg3 w-full ">
-                                <Tags setTags={setTags} tags={tags}/>
+                                <Tags setTags={setTags} tags={product?.tags}/>
                             </div>
                         </div>
                         <div className="flex flex-row justify-end items-center w-full h-full bg-bg2 space-x-6 my-10">
                             <button
                                 type="submit"
                                 className={`py-2.5 px-10 rounded text-white text-base font-medium ${isLoading ? "bg-blue-200": "bg-blue1 "} hover:bg-blue-200 hover:border-blue-200 hover:text-blue1 duration-200`}>
-                                {isLoading ? "Adding product..." : "Add Product"}
+                                {isLoading ? "Saving..." : "Save"}
                             </button>
                             <button
                                 type="submit"

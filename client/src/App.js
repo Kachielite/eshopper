@@ -11,6 +11,7 @@ import ResetPassword from "./pages/ResetPassword";
 import SignUp from "./pages/Sign-up";
 import {Toaster} from "react-hot-toast";
 import Product from "./pages/MenuPages/ProductTab/Product";
+import EditProduct from "./pages/MenuPages/ProductTab/EditProduct";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
               <Route path="/reset_password/:token" element={<ResetPassword />} />
               <Route path="/dashboard" element={<DashboardTab />} />
               <Route path="/products/add_product" element={<AddProduct />} />
+              <Route path="/products/edit-product/:id" element={<EditProduct />} />
               <Route path="/products" element={<Index />} />
               <Route path="/products/:id" element={<Product />} />
               <Route path="/orders" element={<OrdersTab />} />

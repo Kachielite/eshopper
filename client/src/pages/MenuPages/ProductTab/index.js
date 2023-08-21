@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   setPageHandler,
@@ -16,16 +16,18 @@ import arrowRight from "../../../assets/icons/ArrowRight.svg";
 import homeIcon from "../../../assets/icons/Home.svg";
 import { TailSpin } from "react-loader-spinner";
 import SearchBar from "../../../components/searchBar";
+import toast from "react-hot-toast";
 
 const Index = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const productData = useSelector((state) => state.product);
   const {
     checkedProduct,
     sortedArray,
     filter,
     categoriesList,
-    isLoading,
+    isLoadingAllProductData,
     page,
     totalItems,
     nextPage,
@@ -34,9 +36,23 @@ const Index = () => {
   } = productData;
 
   useEffect(() => {
-    dispatch(fetchAllCategories());
-    dispatch(fetchAllProducts({ filters: filter, pageNumber: page }));
+    dispatch(fetchAllCategories())
+        .unwrap()
+        .then(() => dispatch(fetchAllProducts({ filters: filter, pageNumber: page })))
+        .then((res) => Promise.resolve(res))
+        .catch(e => {
+          if(e.status === 401){
+            localStorage.clear()
+            navigate('/')
+            toast.error('Login session expired, kindly login again')
+          } else{
+            toast.error('Something went wrong. Please contact the administrator for assistance')
+            return Promise.reject(e)
+          }
+
+        })
   }, [dispatch, page, filter]);
+
 
   return (
     <Dashboard>
@@ -120,7 +136,7 @@ const Index = () => {
           </div>
         </div>
         {/* Table Container */}
-        {isLoading ? (
+        {isLoadingAllProductData ? (
           <TailSpin
             height="100"
             width="100"
