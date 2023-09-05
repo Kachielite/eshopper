@@ -6,7 +6,7 @@ import Tags from "../../../components/tags/Tags";
 import chevronLeftIcon from "../../../assets/icons/chevronLeft.svg";
 import imageSM from "../../../assets/icons/ImageSM.svg";
 import {useDispatch, useSelector} from "react-redux";
-import {addProduct, fetchProduct} from "../../../store/slices/product";
+import {editProduct, fetchProduct} from "../../../store/slices/product";
 import toast from "react-hot-toast";
 import SuccessModal from "../../../components/success-modal";
 
@@ -18,7 +18,15 @@ const EditProduct = () => {
     const {isLoading, product} = useSelector(state => state.product)
     const [photos, setPhotos] = useState({})
     const [tags, setTags] = useState([]);
-    const [productDetails, setProductDetails] = useState({status: "Available"})
+    const [productDetails, setProductDetails] = useState({
+        status: product?.status,
+        discount: product?.discount,
+        price: product?.price,
+        product_description: product?.product_description,
+        product_name: product?.product_name,
+        tags: product?.tags,
+        category: product?.category
+    })
     const [open, setOpen] = useState(false)
     const cancelButtonRef = useRef(null)
 
@@ -27,15 +35,11 @@ const EditProduct = () => {
         window.location.reload();
     }
 
-    const addProductHandler = (event) => {
+    const updateProductHandler = (event) => {
         event.preventDefault()
         let Files =  Object.entries(photos).map(photo => photo[1])
         let tagsList = tags
-        dispatch(addProduct({productDetails: {...productDetails, Files: Files, tags: tagsList}, setOpen })).then(() => {
-            setTags([])
-            setProductDetails({status: "Available"})
-            setPhotos({})
-        })
+        dispatch(editProduct({id: id , productDetails: {...productDetails, Files: Files, tags: tagsList}, setOpen }))
     }
 
 
@@ -52,7 +56,17 @@ const EditProduct = () => {
     useEffect(() => {
         dispatch(fetchProduct({id:id }))
             .unwrap()
-            .then((res) => Promise.resolve(res))
+            .then((res) => {
+                setProductDetails({
+                    status: product?.status,
+                    discount: product?.discount,
+                    price: product?.price,
+                    product_description: product?.product_description,
+                    product_name: product?.product_name,
+                    tags: product?.tags,
+                    category: product?.category
+                })
+                return Promise.resolve(res)})
             .catch(e => {
                 if(e.status === 401){
                     localStorage.clear()
@@ -90,41 +104,41 @@ const EditProduct = () => {
                     </div>
                 </div>
                 {/* Form Container */}
-                <form onSubmit={addProductHandler} encType="multipart/form-data"
+                <form onSubmit={updateProductHandler} encType="multipart/form-data"
                     className="w-full h-full rounded-md bg-bg2 md:space-x-28 flex flex-col md:flex-row md:justify-center items-center px-8 md:px-20 py-14 mt-8">
                     <div
                         className="flex flex-col-reverse md:flex-row justify-start items-center w-full md:w-[40rem] md:h-[36rem]">
                         <div
                             className="flex flex-row md:flex-col mb-8 md:mb-0 justify-between space-x-2  items-center h-full w-full mt-4">
                             <div className="relative md:h-64 md:w-64 h-32 w-32">
-                                <input type="file" className="md:h-64 md:w-64 h-32 w-32 absolute z-20"
+                                <input type="file" className="md:h-64 md:w-64 h-32 w-32 absolute z-20 cursor-pointer"
                                        accept="image/*" name="product1"
                                        onChange={(event) => setPhotos({...photos, first: event.target.files[0]})}/>
-                                <img src={photos.first ? URL.createObjectURL(photos.first) : imageSM} alt=""
+                                <img src={photos.first ? URL.createObjectURL(photos.first) : imageHandler(0)} alt=""
                                      className="md:h-64 md:w-64 h-32 w-32 absolute z-10 object-contain"/>
                             </div>
                             <div className="relative md:h-64 md:w-64 h-32 w-32">
-                                <input type="file" className="md:h-64 md:w-64 h-32 w-32 absolute z-20"
+                                <input type="file" className="md:h-64 md:w-64 h-32 w-32 absolute z-20 cursor-pointer"
                                        accept="image/*" name="product2"
                                        onChange={(event) => setPhotos({...photos, second: event.target.files[0]})}/>
-                                <img src={photos.second ? URL.createObjectURL(photos.second) : imageSM} alt=""
+                                <img src={photos.second ? URL.createObjectURL(photos.second) : imageHandler(1)} alt=""
                                      className="md:h-64 md:w-64 h-32 w-32 absolute z-10 object-contain"/>
                             </div>
                         </div>
                         <div
                             className="flex flex-row md:flex-col mb-8 md:mb-0 justify-between space-x-2  items-center h-full w-full mt-4">
                             <div className="relative md:h-64 md:w-64 h-32 w-32">
-                                <input type="file" className="md:h-64 md:w-64 h-32 w-32 absolute z-20"
+                                <input type="file" className="md:h-64 md:w-64 h-32 w-32 absolute z-20 cursor-pointer"
                                        accept="image/*" name="product3"
                                        onChange={(event) => setPhotos({...photos, third: event.target.files[0]})}/>
-                                <img src={photos.third ? URL.createObjectURL(photos.third) : imageSM} alt=""
+                                <img src={photos.third ? URL.createObjectURL(photos.third) : imageHandler(2)} alt=""
                                      className="md:h-64 md:w-64 h-32 w-32 absolute z-10 object-contain"/>
                             </div>
                             <div className="relative md:h-64 md:w-64 h-32 w-32">
-                                <input type="file" className="md:h-64 md:w-64 h-32 w-32 absolute z-20"
+                                <input type="file" className="md:h-64 md:w-64 h-32 w-32 absolute z-20 cursor-pointer"
                                        accept="image/*" name="product4"
                                        onChange={(event) => setPhotos({...photos, forth: event.target.files[0]})}/>
-                                <img src={photos.forth ? URL.createObjectURL(photos.forth) : imageSM} alt=""
+                                <img src={photos.forth ? URL.createObjectURL(photos.forth) : imageHandler(3)} alt=""
                                      className="md:h-64 md:w-64 h-32 w-32 absolute z-10 object-contain"/>
                             </div>
                         </div>
@@ -141,7 +155,7 @@ const EditProduct = () => {
                                     product_name: event.target.value
                                 })}
                                 required
-                                value={product?.product_name}
+                                defaultValue={product?.product_name}
                             />
                         </div>
                         <div className="w-full flex flex-col space-y-1">
@@ -170,7 +184,7 @@ const EditProduct = () => {
                                         ...productDetails,
                                         category: event.target.value
                                     })}
-                                    value={product?.category}
+                                    defaultValue={product?.category}
                                     required
                                 />
                             </div>
@@ -182,7 +196,7 @@ const EditProduct = () => {
                                         ...productDetails,
                                         status: event.target.value
                                     })}
-                                    value={product?.status}
+                                    defaultValue={product?.status}
                                 >
                                     <option value="Available">Available</option>
                                     <option value="Deleted">Deleted</option>
@@ -203,7 +217,7 @@ const EditProduct = () => {
                                             ...productDetails,
                                             price: parseInt(event.target.value)
                                         })}
-                                        value={product?.price}
+                                        defaultValue={product?.price}
                                         required
                                     />
                                 </div>
@@ -220,7 +234,7 @@ const EditProduct = () => {
                                             ...productDetails,
                                             discount: parseInt(event.target.value)
                                         })}
-                                        value={product?.discount}
+                                        defaultValue={product?.discount}
                                         required
                                     />
                                 </div>
